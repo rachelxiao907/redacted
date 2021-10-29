@@ -1,9 +1,9 @@
 # StoryForge by Redacted
 ## Roster with Roles
-- Rachel Xiao: Product Manager / Flask Developer
-- David Chong: Front End Developer
-- Michael Borczuk: Flask Developer
-- Yuqing Wu: Backend SQL Developer
+- Rachel Xiao: Product Manager / starting story page, home page
+- David Chong: Front End Developer, all the html templates
+- Michael Borczuk: Login, cookies, create account page
+- Yuqing Wu: Add story, choosing which story to add to pages
 
 
 ### Clone Repository
