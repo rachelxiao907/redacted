@@ -27,7 +27,14 @@ c.execute (command + "story (title TEXT, contributor TEXT, entry TEXT)")
 #testing
 #c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
 
-# add to existing stories kind of works for now, Yuqing
+"""
+
+add_to_story would add entries and contributors of the entry to story database
+also add this story to the list of stories that the user stories_contributed
+returns nothing
+
+"""
+# add to existing stories kind of works for now
 def add_to_story(_title, _contributor, _entry):
     contributor = ""
     entry = ""
