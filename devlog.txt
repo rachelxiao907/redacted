@@ -3,3 +3,6 @@ Created initial files structure.
 
 rachelX -- 2021-10-28 20:49
 Edited site map to have the correct names of links. Reorganized database tables.
+
+yuqingW -- 2021-10-29 17:09
+Created database template file, wrote add_to_story function.
