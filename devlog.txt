@@ -6,3 +6,6 @@ Edited site map to have the correct names of links. Reorganized database tables.
 
 yuqingW -- 2021-10-29 17:09
 Created database template file, wrote add_to_story function.
+
+michaelB -- 2021-10-31 10:42
+Created app.py (to handle login), completed login page/backend (get_login method).

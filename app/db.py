@@ -16,16 +16,27 @@ db = sqlite3.connect(DB_FILE)
 c = db.cursor()
 
 #create tables for database
-command = "CREATE TABLE "
+command = "CREATE TABLE IF NOT EXISTS "
 
 # Creating table with username | password | stories contributed table
-c.execute (command + "user_info (username TEXT, password TEXT, stories_contributed TEXT)")
+c.execute (command + "user_info (username TEXT, password TEXT, stories_contributed TEXT, CONSTRAINT uni_user UNIQUE(username))") # vals in username col must be unique
 
 # creating table with story title | user contributed | story entry
 c.execute (command + "story (title TEXT, contributor TEXT, entry TEXT)")
 
 #testing
-#c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
+# c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
+'''
+# -- testing --
+c.execute("INSERT INTO user_info VALUES(?, ?)", ("hi", "bye"))
+c.execute("INSERT INTO user_info VALUES(?, ?)", ("hiakjsdhajsdhkajsdgh", "bye"))
+try:
+    c.execute("INSERT INTO user_info VALUES(?, ?)", ("hi", "aksjdhakd"))
+except sqlite3.IntegrityError:
+    print("asdhasd")
+c.execute("SELECT * from user_info WHERE username=\"hi\"")
+print(c.fetchall())
+'''
 
 """
 
@@ -46,7 +57,7 @@ def add_to_story(_title, _contributor, _entry):
     command = "SELECT contributor, entry FROM story WHERE (title=:title)"
     c.execute(command, dict) # the field in dict would replace :title
     contributor_entry_list = c.fetchall() #stores the information. It's a list of tuple, so kind of like 2D array
-
+    print(contributor_entry_list)
     # add new information to contributor and entry through string concatenation, separated with \n
     entry += contributor_entry_list[0][1] + "\n" + _entry
     contributor += contributor_entry_list[0][0] + "\n" + _contributor
@@ -68,7 +79,7 @@ def add_to_story(_title, _contributor, _entry):
     # add_stories_contributed (_title)
 
 # add_to_story test
-#add_to_story("story1", "user2", "world")
+# add_to_story("story1", "user2", "world")
 
 """
 get_story gets the entire story, returns the story entries and the different
@@ -106,7 +117,22 @@ get_login would get password to flask for checking
 
 Michael will do this
 """
-# def get_login(username):
+def get_login(username, password):
+    # create new cursor to resolve thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    # test
+    c.execute("INSERT INTO user_info VALUES(?, ?, ?)", ("hi", "bye", "die"))
+    print(username)
+    command = f"SELECT * FROM user_info WHERE (username = \"{username}\")"
+    c.execute(command)
+    data = c.fetchall() 
+    if(data == []):
+        return "User Not Found"
+    elif(data[0][1] != password):
+        return "Username and password do not match"
+    else:
+        return ""
 
 """
 get_stories_contributed would return the list of stories that
