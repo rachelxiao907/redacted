@@ -9,3 +9,6 @@ Created database template file, wrote add_to_story function.
 
 michaelB -- 2021-10-31 10:42
 Created app.py (to handle login), completed login page/backend (get_login method).
+
+michaelB -- 2021-10-31 14:40
+Added create account page, wrote backend to handle account creation.

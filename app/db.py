@@ -110,28 +110,31 @@ add_login would be used for creating account
 Michael will do this
 
 """
-#def add_login(username, password):
-
+def add_login(username, password):
+    # avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    print(username)
+    command = "INSERT INTO user_info VALUES(?, ?, ?)"
+    c.execute(command, (username, password, "")) # add u/p pair to database, leave stories contributed blank for now
+    db.commit() # commit changes to db
 """
 get_login would get password to flask for checking
 
 Michael will do this
 """
 def get_login(username, password):
-    # create new cursor to resolve thread error
+    # avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    # test
-    c.execute("INSERT INTO user_info VALUES(?, ?, ?)", ("hi", "bye", "die"))
-    print(username)
-    command = f"SELECT * FROM user_info WHERE (username = \"{username}\")"
+    command = f"SELECT * FROM user_info WHERE (username = \"{username}\")" # check if username exists in the db
     c.execute(command)
     data = c.fetchall() 
-    if(data == []):
+    if(data == []): # no user exists
         return "User Not Found"
-    elif(data[0][1] != password):
+    elif(data[0][1] != password): # password is wrong
         return "Username and password do not match"
-    else:
+    else: # we good
         return ""
 
 """
@@ -157,5 +160,4 @@ Rachel will do this
 # def add_stories_contributed (title):
 
 
-db.commit()
 db.close()

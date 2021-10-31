@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title> StoryForge </title>
+  </head>
+
+  <body>
+    <h1>
+        you can create an account here
+    </h1>
+
+    <h3>
+      CREATE AN ACCOUNT
+    </h3>
+    <form action="/create_account" method="POST">
+      <label>Set Username:</label>
+      <input type="text" name="username">
+      <br><br>
+      <label>Set Password:</label>
+      <input type="password" name="password">
+      <br><br>
+      <label>Confirm Password:</label>
+      <input type="password" name="cpassword">
+      <br>
+      {{error_message}} <br><br>
+      <input type="submit" name="sub1" value="Create My Account!">
+    </form>
+    <br>
+    <form action="/" method="POST">
+        <input type="submit" name="sub1" value="Back to Login Page">
+    </form>
+  </body>
+
+</html>

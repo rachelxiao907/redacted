@@ -4,7 +4,7 @@ from flask import request           #facilitate form submission
 from flask import session           #allow for session creation/maintenance
 from flask import redirect
 from os import urandom
-from db import get_login
+from db import get_login, add_login
 import sqlite3   #enable control of an sqlite database
 
 app = Flask(__name__)    #create Flask object
@@ -79,7 +79,47 @@ def authenticate():
 
     return render_template('login.html', error_message = error) # render login page with an error message
 
-
+@app.route("/create_account", methods=['GET', 'POST'])
+def create_account_render():
+    # check if input exists by checking if username input is in request dictionary
+    if('username' in request.form or 'username' in request.args):
+        name_input = "" #username input
+        pass_input = "" #password input
+        cpass_input = "" #confirm password
+        error = "" # error message
+        # checks for request method and gets the input
+        if(request.method == "GET"):
+            name_input = request.args['username']
+            pass_input = request.args['password']
+            cpass_input = request.args['cpassword']
+        else:
+            name_input = request.form['username']
+            pass_input = request.form['password']
+            cpass_input = request.form['cpassword']
+        # checks input for validity (it exists, passwords match, etc.)
+        if(name_input == ""):
+            error = "Username field cannot be blank!"
+        elif(pass_input == ""):
+            error = "Password field cannot be blank!"
+        elif("\\n" in name_input):
+            error = "Username cannot contain \\n!"
+        elif(pass_input != cpass_input):
+            error = "Password fields must match!"
+        else:
+            print("adding")
+            try:
+                add_login(name_input, pass_input) # try to add u/p pair to db
+                return redirect("/") # go back to main login page
+            except sqlite3.IntegrityError: # will throw this error if the username is a duplicate
+                error = "Username already exists!"
+        # render the page after processing input
+        return render_template('create_account.html', error_message=error)
+    # render the page
+    return render_template('create_account.html')
+@app.route("/create_input", methods=['GET', 'POST'])
+def create_account_input():
+    
+    return render_template('create_account.html')
 
 
 if __name__ == "__main__": #false if this file imported as module
