@@ -129,11 +129,12 @@ def get_story_last_entry (title):
         output_list.append(big_list[i][-1])
     return output_list
 
-# doesn't work yet
+
 def get_story_addable(username):
 
     """
-    This would get the stories that the user did not contribute to
+    This would get the stories that the user did not contribute to,
+    these are the stories that they can add to on the /add page
 
     """
 
@@ -141,19 +142,27 @@ def get_story_addable(username):
     c.execute("SELECT title FROM story")
     titles = c.fetchall()
 
+    #uncomment when get_stories_contributed done
+    #stories_contributed = get_stories_contributed(username)
 
+    #for testing
+    stories_contributed = ["story1", "story2"]
+
+    addable_stories = []
+
+    #if a story is not in stories_contributed, it's addable
     for i in titles:
-        dict = {"title" : i, "user":username}
+        if ((i[0] in stories_contributed) == False):
+            addable_stories.append(i[0])
 
-        c.execute("SELECT :title from user_info WHERE username = :user", dict)
-        print(c.fetchall())
-
+    return addable_stories
 
 """
 # -- testing add_to_story, get_story, get_story_last_entry --
 
 c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
 c.execute ("INSERT INTO story VALUES ('story2', 'user1', 'entry1')")
+c.execute ("INSERT INTO story VALUES ('story3', 'user1', 'entry1')")
 c.execute ("INSERT INTO user_info VALUES ('user1', 'pass1', 'story1')")
 
 # add_to_story test
@@ -161,14 +170,14 @@ add_to_story("story1", "user2", "world")
 
 
 #get_story test
-#print (get_story('story1'))
+print (get_story('story1'))
 
 #get story last entry test
-#print(get_story_last_entry("story1"))
+print(get_story_last_entry("story1"))
 
 #print(get_story.__doc__)
 
-get_story_addable("user1")
+print (get_story_addable("user1"))
 """
 
 def add_login(username, password):
