@@ -21,3 +21,6 @@ Added requirements.txt
 
 davidC -- 2021-11-01 09:25
 Edited home.html and create_account.html
+
+yuqingW -- 2021-11-01 14:23
+Added backend function (get_addable_stories) that is used for /add page. 
