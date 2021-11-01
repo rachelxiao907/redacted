@@ -12,3 +12,6 @@ Created app.py (to handle login), completed login page/backend (get_login method
 
 michaelB -- 2021-10-31 14:40
 Added create account page, wrote backend to handle account creation.
+
+yuqingW -- 2021-10-31 15:50
+completed backend for getting story entries and contributors (get_story, get_story_last_entry).
