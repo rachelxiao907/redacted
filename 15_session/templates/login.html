@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!-- 
+  Team F^2: Michael Borczuk, Yuqing Wu, David Chong
+  SoftDev
+  K15 -- Sessions Greetings
+  2021-10-19
+ -->
+
+
+<html>
+
+  <head>
+    <title> LOGIN PAGE </title>
+  </head>
+
+  <body>
+    <h1>
+      Team F^2
+      <br>
+      Michael Borczuk, Yuqing Wu, David Chong
+      <br>
+      <br>
+      Welcome, Travelers of the Intertoobz! 
+    </h1>
+
+
+    <h3>
+      Enter your username and password below to proceed.
+    </h3>
+    <form action="/auth" method="post"> <!-- go to /auth -->
+      username: <input type="text" name="username"> <br/>
+      password: <input type="password" name="password"> <br/> 
+      {{error_message}}<br/><br/>
+      <input type="submit" value="Login" name="sub1">
+    </form>
+    <br>
+    
+  </body>
+
+</html>
