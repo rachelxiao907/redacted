@@ -35,17 +35,18 @@ c.execute("SELECT * from user_info WHERE username=\"hi\"")
 print(c.fetchall())
 '''
 
-"""
-add_to_story would add entries and contributors of the entry to story database
-also add this story to the list of stories that the user stories_contributed
-returns nothing
-
-As of now it would add to the story every time the command is called, re running won't
-clear the database and maybe we should clear the database at the end of init.py so we
-always have a new database to work with every time the program is ran.
-"""
 # add to existing stories kind of works for now
 def add_to_story(title, contributor, entry):
+
+    """
+    add_to_story would add entries and contributors of the entry to story database
+    also add this story to the list of stories that the user stories_contributed
+    returns nothing
+
+    As of now it would add to the story every time the command is called, re running won't
+    clear the database
+
+    """
 
     # creates a dictionary to facilitate argument passing in the future
     dict = {"title":title, "contributor":contributor, "entry": entry}
@@ -85,15 +86,16 @@ def add_to_story(title, contributor, entry):
 # add_to_story test
 # add_to_story("story1", "user2", "world")
 
-"""
-get_story gets the entire story, returns the story entries and the different
-users that contributed to each entry in a list
-[contributors_list, story_entry_list]
-Yuqing will code this part but Rachel should check since she's using it for the
-past story part in /home page
-"""
+
 
 def get_story (title):
+    """
+    get_story gets the entire story, returns the story entries and the different
+    users that contributed to each entry in a list
+    [contributors_list, story_entry_list]
+    Yuqing will code this part but Rachel should check since she's using it for the
+    past story part in /home page
+    """
     #selects contributors and entry
     c.execute("SELECT contributor, entry FROM story WHERE title = :title", {"title":title})
     entry_list = c.fetchall()
@@ -106,17 +108,20 @@ def get_story (title):
 
     #diag print statement
     #print(output_list)
+    #print(get_story.__doc__)
     return output_list
 
 
 
-"""
-get_story_last_entry gets the last entry for a story, returns
-the user contributed to the last entry and the last entry in a list
-[contributor, last_entry]
-Yuqing will do this
-"""
 def get_story_last_entry (title):
+
+    """
+    get_story_last_entry gets the last entry for a story, returns
+    the user contributed to the last entry and the last entry in a list
+    [contributor, last_entry]
+
+    """
+
     # use get_story in its implementation
     output_list = []
     big_list = get_story(title)
@@ -124,27 +129,54 @@ def get_story_last_entry (title):
         output_list.append(big_list[i][-1])
     return output_list
 
+# doesn't work yet
+def get_story_addable(username):
+
+    """
+    This would get the stories that the user did not contribute to
+
+    """
+
+    #titles of all stories, each title in a tuple
+    c.execute("SELECT title FROM story")
+    titles = c.fetchall()
+
+
+    for i in titles:
+        dict = {"title" : i, "user":username}
+
+        c.execute("SELECT :title from user_info WHERE username = :user", dict)
+        print(c.fetchall())
+
+
 """
-# -- testing add_to_story, get_story, get_story_last_entry -- 
+# -- testing add_to_story, get_story, get_story_last_entry --
 
 c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
+c.execute ("INSERT INTO story VALUES ('story2', 'user1', 'entry1')")
+c.execute ("INSERT INTO user_info VALUES ('user1', 'pass1', 'story1')")
 
 # add_to_story test
 add_to_story("story1", "user2", "world")
 
+
 #get_story test
-print (get_story('story1'))
+#print (get_story('story1'))
 
 #get story last entry test
-print(get_story_last_entry("story1"))
+#print(get_story_last_entry("story1"))
+
+#print(get_story.__doc__)
+
+get_story_addable("user1")
 """
 
-
-"""
-add_login would be used for creating account
-Michael will do this
-"""
 def add_login(username, password):
+    """
+    add_login would be used for creating account
+
+    """
+
     # avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -152,11 +184,13 @@ def add_login(username, password):
     command = "INSERT INTO user_info VALUES(?, ?, ?)"
     c.execute(command, (username, password, "")) # add u/p pair to database, leave stories contributed blank for now
     db.commit() # commit changes to db
-"""
-get_login would get password to flask for checking
-Michael will do this
-"""
+
+
 def get_login(username, password):
+    """
+    get_login would get password to flask for checking
+
+    """
     # avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -170,32 +204,35 @@ def get_login(username, password):
     else: # we good
         return ""
 
-"""
-get_stories_contributed would return the list of stories that
-the user contributed
-Rachel will do this and determine what exactly it returns, whether it's the
-titles and then call get_story or the entire thing is ready for flask
-"""
-#def get_stories_contributed (username):
 
-"""
-add_stories_contributed would add this story to the list of
-stories that the user had contributed.
-We can technically do it in add_to_story but I feel like
-it's easier to split up work if it's this way
-Rachel will do this
-"""
+#def get_stories_contributed (username):
+    """
+    get_stories_contributed would return the list of stories that
+    the user contributed
+    Rachel will do this and determine what exactly it returns, whether it's the
+    titles and then call get_story or the entire thing is ready for flask
+    """
+
+
 # def add_stories_contributed (title):
+    """
+    add_stories_contributed would add this story to the list of
+    stories that the user had contributed.
+    We can technically do it in add_to_story but I feel like
+    it's easier to split up work if it's this way
+    Rachel will do this
+    """
     #db.commit()
 
-"""
-
-For the /create page, add a new story to the story table
-
-Rachel will do
-
-"""
 #def create_story(title, entry, user):
+
+    """
+
+    For the /create page, add a new story to the story table
+
+    Rachel will do
+
+    """
     #db.commit()
 
 
