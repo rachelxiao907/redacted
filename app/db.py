@@ -255,9 +255,9 @@ def add_stories_contributed (username, title):
     c = db.cursor()
 
     stories_contributed = get_stories_contributed().append(title)
-    command = "UPDATE user_info SET stories_contributed =" + stories_contributed + "WHERE username =" + username"
+    command = "UPDATE user_info SET stories_contributed =" + stories_contributed + "WHERE username =" + username
     c.execute(command)
-    #db.commit()
+    db.commit()
 '''
 
 
