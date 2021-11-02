@@ -9,6 +9,24 @@ import sqlite3   #enable control of an sqlite database
 
 app = Flask(__name__)    #create Flask object
 app.secret_key = urandom(32) #generates random key
+
+"""
+to see how everything work (Yuqing just tested for one user so)
+    create account & login
+
+    Click create a story, enter fields.
+
+    You should be redirected to home page, click add to story
+
+    you should see the story you created, click on it
+
+    you should see your username and entry you last entered when creating it. Enter a new entry.
+
+    You should be redirected to home page, click add to story again, you shouldn't see anything since you can't
+    add to a story twice
+
+Somebody test out multi users.
+"""
 @app.route("/", methods=['GET', 'POST'])
 def disp_loginpage():
     print("\n\n\n")
@@ -106,22 +124,6 @@ def create_account_render():
     # render the page
     return render_template('create_account.html')
 
-"""
-to see how the add story functions work:
-    uncomment  -- testing for add story -- part in db file, should just have the three manually add story
-    c.execute statement and db.commit
-
-    create account & login
-
-    type in the search bar /add instead of /home, you should see some number of story2 or story3 (because
-    story1 is marked as contributed manually in the get_addable_story function for testing)
-
-    click on any of them, you should see last entries at the top and type in the input text section, click submitting
-
-    you should be redirected to the add page once you click submit.
-
-    click on the same story again, the last entry should show up as what you just entered
-"""
 
 #stories got added is weird because of the number of times the scripts in db file is called,
 # should be fixed when everything is linked together and when i don't test with manual insert intos.
