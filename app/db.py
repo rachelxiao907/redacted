@@ -47,7 +47,9 @@ def add_to_story(title, contributor, entry):
     clear the database
 
     """
-
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
     # creates a dictionary to facilitate argument passing in the future
     dict = {"title":title, "contributor":contributor, "entry": entry}
     #print(dict)
@@ -59,9 +61,10 @@ def add_to_story(title, contributor, entry):
     #print(contributor_entry_list)
 
     # add new information to contributor and entry through string concatenation, separated with \n
+    #print(contributor_entry_list)
     entry = contributor_entry_list[0][1] + "\n" + entry
     contributor = contributor_entry_list[0][0] + "\n" + contributor
-    #print(contributor_entry_list)
+
     #print(contributor)
 
     # reset the dictionary to contain the most recent information
@@ -96,6 +99,9 @@ def get_story (title):
     Yuqing will code this part but Rachel should check since she's using it for the
     past story part in /home page
     """
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
     #selects contributors and entry
     c.execute("SELECT contributor, entry FROM story WHERE title = :title", {"title":title})
     entry_list = c.fetchall()
@@ -121,7 +127,9 @@ def get_story_last_entry (title):
     [contributor, last_entry]
 
     """
-
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
     # use get_story in its implementation
     output_list = []
     big_list = get_story(title)
@@ -137,6 +145,9 @@ def get_story_addable(username):
     these are the stories that they can add to on the /add page
 
     """
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
 
     #titles of all stories, each title in a tuple
     c.execute("SELECT title FROM story")
@@ -146,7 +157,7 @@ def get_story_addable(username):
     #stories_contributed = get_stories_contributed(username)
 
     #for testing
-    stories_contributed = ["story1", "story2"]
+    stories_contributed = ["story1"]
 
     addable_stories = []
 
@@ -163,8 +174,13 @@ def get_story_addable(username):
 c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
 c.execute ("INSERT INTO story VALUES ('story2', 'user1', 'entry1')")
 c.execute ("INSERT INTO story VALUES ('story3', 'user1', 'entry1')")
-c.execute ("INSERT INTO user_info VALUES ('user1', 'pass1', 'story1')")
+#c.execute ("INSERT INTO user_info VALUES ('user1', 'pass1', 'story1')")
 
+#because we are doing a connenct for every function, make sure initial test cases are saved
+db.commit()
+"""
+
+"""
 # add_to_story test
 add_to_story("story1", "user2", "world")
 
@@ -180,6 +196,7 @@ print(get_story_last_entry("story1"))
 print (get_story_addable("user1"))
 """
 
+"""
 def add_login(username, password):
     """
     add_login would be used for creating account
