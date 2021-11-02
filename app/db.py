@@ -77,25 +77,23 @@ def add_to_story(title, contributor, entry):
     c.execute("UPDATE story SET entry = :entry WHERE title =:title", dict)
 
 
-    # to be added: parts about marking this story as contributed by the user
+    # this is the add_stories_contributed part I just put it with add_to_story
 
 
     c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
     a = c.fetchall()
-    print(a[0][0]
-    )
+
     if(a[0][0] != ""):
         stories_contributed = a[0][0] + "\n" + title
     else:
         stories_contributed = title
 
     dict = {"stories_contributed":stories_contributed, "contributor":contributor}
-    print(stories_contributed)
-    print(contributor)
+
     c.execute("UPDATE user_info SET stories_contributed =:stories_contributed WHERE username = :contributor", dict)
 
     c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
-    print(c.fetchall())
+
     db.commit()
 
 
@@ -119,7 +117,7 @@ def get_story (title):
     c.execute("SELECT contributor, entry FROM story WHERE title = :title", {"title":title})
     entry_list = c.fetchall()
     output_list = []
-    print(entry_list)
+
     #index 0 because tuple
     for i in range(2):
         #split for each \n
@@ -149,7 +147,6 @@ def get_story_last_entry (title):
     output_list = []
     big_list = get_story(title)
     for i in range(2):
-
         output_list.append(big_list[i][-1])
     return output_list
 
@@ -184,33 +181,6 @@ def get_story_addable(username):
 
     return addable_stories
 
-"""
-# -- testing add_to_story, get_story, get_story_last_entry --
-
-c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
-c.execute ("INSERT INTO story VALUES ('story2', 'user1', 'entry1')")
-c.execute ("INSERT INTO story VALUES ('story3', 'user1', 'entry1')")
-#c.execute ("INSERT INTO user_info VALUES ('user1', 'pass1', 'story1')")
-
-#because we are doing a connenct for every function, make sure initial test cases are saved
-db.commit()
-
-"""
-"""
-# add_to_story test
-add_to_story("story1", "user2", "world")
-
-
-#get_story test
-print (get_story('story1'))
-
-#get story last entry test
-print(get_story_last_entry("story1"))
-
-#print(get_story.__doc__)
-
-print (get_story_addable("user1"))
-"""
 
 def add_login(username, password):
     #add_login would be used for creating account
@@ -259,36 +229,6 @@ def get_stories_contributed(username):
 
 
 
-def add_stories_contributed (username, title):
-    """
-    add_stories_contributed would add this story to the list of
-    stories that the user had contributed.
-    We can technically do it in add_to_story but I feel like
-    it's easier to split up work if it's this way
-    Rachel will do this
-    """
-    #avoid thread error
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-
-    c.execute("SELECT stories_contributed FROM user_info WHERE username =:username", {"username": username})
-    a = c.fetchall()
-    print(a)
-    if(a[0][0] != ""):
-        stories_contributed = c.fetchall()[0][0] + "\n" + title
-    else:
-        stories_contributed = title
-
-    dict = {"stories_contributed":stories_contributed, "username":username}
-    print(stories_contributed)
-    print(username)
-    c.execute("UPDATE user_info SET stories_contributed =:stories_contributed WHERE username = :username", dict)
-    db.commit()
-    c.execute("SELECT stories_contributed FROM user_info WHERE username =:username", {"username": username})
-    print(c.fetchall())
-    db.commit()
-
-
 def create_story(title, user, entry):
         #avoid thread error
     db = sqlite3.connect(DB_FILE)
@@ -296,6 +236,3 @@ def create_story(title, user, entry):
     print(entry)
     c.execute("INSERT INTO story VALUES(?,?,?)", (title, user,entry))
     db.commit()
-
-
-#db.close() # this should go at the very end of init.py, remember to import db into init.py
