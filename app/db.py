@@ -168,7 +168,6 @@ def get_story_addable(username):
 
     return addable_stories
 
-"""
 # -- testing add_to_story, get_story, get_story_last_entry --
 
 c.execute ("INSERT INTO story VALUES ('story1', 'user1', 'entry1')")
@@ -178,7 +177,7 @@ c.execute ("INSERT INTO story VALUES ('story3', 'user1', 'entry1')")
 
 #because we are doing a connenct for every function, make sure initial test cases are saved
 db.commit()
-"""
+
 
 """
 # add_to_story test
@@ -196,12 +195,8 @@ print(get_story_last_entry("story1"))
 print (get_story_addable("user1"))
 """
 
-"""
 def add_login(username, password):
-    """
-    add_login would be used for creating account
-
-    """
+    #add_login would be used for creating account
 
     # avoid thread error
     db = sqlite3.connect(DB_FILE)
@@ -230,17 +225,24 @@ def get_login(username, password):
     else: # we good
         return ""
 
-
-#def get_stories_contributed (username):
+def get_stories_contributed(username):
     """
     get_stories_contributed would return the list of stories that
     the user contributed
     Rachel will do this and determine what exactly it returns, whether it's the
     titles and then call get_story or the entire thing is ready for flask
     """
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    c.execute("SELECT stories_contributed FROM user_info WHERE username =" + username)
+    d.commit()
+    return list(c.fetchall())
 
 
-# def add_stories_contributed (title):
+'''
+def add_stories_contributed (username, title):
     """
     add_stories_contributed would add this story to the list of
     stories that the user had contributed.
@@ -248,17 +250,18 @@ def get_login(username, password):
     it's easier to split up work if it's this way
     Rachel will do this
     """
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    stories_contributed = get_stories_contributed().append(title)
+    command = "UPDATE user_info SET stories_contributed =" + stories_contributed + "WHERE username =" + username"
+    c.execute(command)
     #db.commit()
+'''
+
 
 #def create_story(title, entry, user):
-
-    """
-
-    For the /create page, add a new story to the story table
-
-    Rachel will do
-
-    """
     #db.commit()
 
 

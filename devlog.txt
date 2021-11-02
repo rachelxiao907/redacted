@@ -25,5 +25,7 @@ Edited home.html and create_account.html
 yuqingW -- 2021-11-01 14:23
 Added backend function (get_addable_stories) that is used for /add page. 
 
-yuqingW --2021-11-02 14:08
+yuqingW -- 2021-11-02 14:08
 Finished /add page and /add/<story> page with simple html templates. 
+
+rachelX -- 2021-11-02 16:17
