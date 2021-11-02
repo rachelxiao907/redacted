@@ -9,14 +9,15 @@
     <h1>
         Start a Story
     </h1>
-    <form action="/create" method="POST">
+    <form action="/home" method="POST">
       <label>Title:</label>
       <input type="text" name="title">
       <br><br>
       <label>Content:</label>
       <input type="text" name="content">
+      <input type="hidden" name="type" value = "create">
       <br><br>
-      <input type="submit" name="sub1" value="Submit Story">
+      <input type="submit" name="sub_create" value="Submit Story">
     </form>
     <br>
   </body>
