@@ -59,7 +59,7 @@ def disp_loginpage():
     return render_template('login.html') # otherwise render login page
 
 
-@app.route("/home" , methods=['GET', 'POST'])
+@app.route("/home", methods=['GET', 'POST'])
 def load_home():
     return render_template('home.html') # render login page with an error message
 
@@ -119,7 +119,7 @@ to see how the add story functions work:
 
 #stories got added is weird because of the number of times the scripts in db file is called,
 # should be fixed when everything is linked together and when i don't test with manual insert intos.
-@app.route("/add",methods=['GET', 'POST'])
+@app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
 
     #when you login the site, session["login"] would store which use is using
@@ -139,6 +139,17 @@ def add_a_story(story):
     last_entry = db.get_story_last_entry(story)
     return render_template("add_story.html",last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
 
+@app.route("/create", methods=['GET', 'POST'])
+def create_story():
+    title_input = ""
+    content_input = ""
+    if(request.method == "GET"):
+        title_input = request.args['title']
+        content_input = request.args['content']
+    else:
+        title_input = request.form['title']
+        content_input = request.form['content']
+    return render_template("create.html")
 
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
