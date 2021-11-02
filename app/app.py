@@ -103,7 +103,7 @@ def create_account_render():
 """
 to see how the add story functions work:
     uncomment  -- testing for add story -- part in db file, should just have the three manually add story
-    c.execute statement
+    c.execute statement and db.commit
 
     create account & login
 
