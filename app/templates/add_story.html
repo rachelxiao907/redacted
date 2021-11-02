@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title> StoryForge </title>
+  </head>
+
+  <body>
+    <!--display last entry-->
+    <h3>
+      Last Entry:
+    </h3>
+    {{last_contributor}} <br/><br/>
+    {{last_entry}}<br/><br/>
+
+    <!-- adding new entry -->
+    <form action="/add" method="POST">
+      <label>Enter your entry:</label><br/><br/>
+      <!-- max length for entry is 200 characters -->
+      <input type="text" name="entry" maxlength = "200"> <br/><br/>
+
+      <!-- storing information of the title of story added to be passed to python script -->
+      <input type = "hidden" name = "title" value = {{title}}>
+      <input type="submit" name="sub_entry" value="Submit">
+
+    </form>
+    <br>
+
+  </body>
+
+</html>
