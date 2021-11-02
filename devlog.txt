@@ -29,3 +29,7 @@ yuqingW -- 2021-11-02 14:08
 Finished /add page and /add/<story> page with simple html templates. 
 
 rachelX -- 2021-11-02 16:17
+Started db.py functions for stories.
+
+rachelX -- 2021-11-02 16:54
+Started create story page and new route through flask.
