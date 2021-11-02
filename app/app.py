@@ -61,6 +61,12 @@ def disp_loginpage():
 
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
+    if(request.method == "POST"):
+        if(request.form["type"] == "create"):
+            db.create_story(request.form['title'], session["login"],request.form['content'])
+        else:
+            db.add_to_story(request.form["title"], session["login"],request.form["entry"])
+
     return render_template('home.html') # render login page with an error message
 
 @app.route("/create_account", methods=['GET', 'POST'])
@@ -124,8 +130,6 @@ def add_story_list():
 
     #when you login the site, session["login"] would store which use is using
     story_list = db.get_story_addable(session["login"])
-    if(request.method == 'POST'):
-        db.add_to_story(request.form["title"], session["login"],request.form["entry"])
 
         #terminal testing prints
         #print("added to story")
@@ -141,18 +145,10 @@ def add_a_story(story):
 
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
-    title_input = ""
-    content_input = ""
-    if(request.method == "GET"):
-        title_input = request.args['title']
-        content_input = request.args['content']
-    else:
-        title_input = request.form['title']
-        content_input = request.form['content']
     return render_template("create.html")
 
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
     app.debug = True
     app.run()
-    db.db.close()
+    #db.db.close()
