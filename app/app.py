@@ -82,10 +82,11 @@ def load_home():
     if("login" in session and not(session["login"] == False)):
         if(request.method == "POST"):
             if(request.form["type"] == "create"):
-                error=db.create_story(request.form['title'], session["login"],request.form['content'])
-                #doesn't work yet
-                #if(error != ""):
-                #    return redirect("/create")
+                try:
+                    db.create_story(request.form['title'], session["login"],request.form['content'])
+                except sqlite3.IntegrityError:
+                    render_template('home.html', name = session["login"], error = "title already exist")
+
             else:
                 db.add_to_story(request.form["title"], session["login"],request.form["entry"])
 
@@ -152,7 +153,16 @@ def add_a_story(story):
 
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
-    return render_template("create.html")
+    if(request.method == "POST"):
+        print(request.form)
+        try:
+            db.create_story(request.form['title'], session["login"],request.form['content'])
+            return render_template('create.html', message = "success" )
+        except sqlite3.IntegrityError:
+            return render_template('create.html', message = "titled already exist" )
+
+    else:
+        return render_template("create.html", message = "")
 
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified

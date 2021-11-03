@@ -19,9 +19,10 @@ command = "CREATE TABLE IF NOT EXISTS "
 c.execute (command + "user_info (username TEXT, password TEXT, stories_contributed TEXT, CONSTRAINT uni_user UNIQUE(username))") # vals in username col must be unique
 
 # creating table with story title | user contributed | story entry
-c.execute (command + "story (title TEXT, contributor TEXT, entry TEXT, CONSTRAINT uni_title UNIQUE(title))")
+c.execute (command + "story (title TEXT type UNIQUE, contributor TEXT, entry TEXT)")
 
-
+#c.execute("INSERT INTO story VALUES(?, ?,?)", ("a","a","a"))
+#c.execute("INSERT INTO story VALUES(?, ?,?)", ("a","a","a"))
 
 '''
 # -- testing --
@@ -79,13 +80,11 @@ def create_story(title, user, entry):
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    str = ""
-    try:
-        c.execute("INSERT INTO story VALUES(?,?,?)", (title, user, entry))
-    except sqlite3.IntegrityError:
-        str = "title used"
-    return str
+
+    c.execute("INSERT INTO story VALUES(?,?,?)", (title, user, entry))
+
     db.commit()
+
 
 
 # add to existing stories kind of works for now
