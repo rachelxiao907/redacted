@@ -93,6 +93,7 @@ def load_home():
         return render_template('home.html', name = session["login"]) # render login page with an error message
     return redirect("/")
 
+
 @app.route("/create_account", methods=['GET', 'POST'])
 def create_account_render():
     # check if input exists by checking if username input is in request dictionary
@@ -144,12 +145,14 @@ def add_story_list():
         #print(get_story_last_entry(request.form["title"]))
     return render_template("add.html", collection = story_list)
 
+
 #after submitting would go to the add page
 @app.route("/add/<story>")
 def add_a_story(story):
     #displays the contributor and the last entry of story
     last_entry = db.get_story_last_entry(story)
-    return render_template("add_story.html",last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
+    return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
+
 
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
@@ -157,12 +160,13 @@ def create_story():
         print(request.form)
         try:
             db.create_story(request.form['title'], session["login"],request.form['content'])
-            return render_template('create.html', message = "success" )
+            return render_template('create.html', message = "You've created a story!" )
         except sqlite3.IntegrityError:
-            return render_template('create.html', message = "titled already exist" )
+            return render_template('create.html', message = "Title already exists" )
 
     else:
         return render_template("create.html", message = "")
+
 
 if __name__ == "__main__": #false if this file imported as module
     #enable debugging, auto-restarting of server when this file is modified
