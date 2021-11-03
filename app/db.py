@@ -19,7 +19,7 @@ command = "CREATE TABLE IF NOT EXISTS "
 c.execute (command + "user_info (username TEXT, password TEXT, stories_contributed TEXT, CONSTRAINT uni_user UNIQUE(username))") # vals in username col must be unique
 
 # creating table with story title | user contributed | story entry
-c.execute (command + "story (title TEXT, contributor TEXT, entry TEXT)")
+c.execute (command + "story (title TEXT, contributor TEXT, entry TEXT, CONSTRAINT uni_title UNIQUE(title))")
 
 
 
@@ -28,17 +28,17 @@ c.execute (command + "story (title TEXT, contributor TEXT, entry TEXT)")
 c.execute("INSERT INTO user_info VALUES(?, ?)", ("hi", "bye"))
 c.execute("INSERT INTO user_info VALUES(?, ?)", ("hiakjsdhajsdhkajsdgh", "bye"))
 try:
-    c.execute("INSERT INTO user_info VALUES(?, ?)", ("hi", "aksjdhakd"))
+    c.execute("INSERT INTO userCONSTRAINT uni_title UNIQUE(title))_info VALUES(?, ?)", ("hi", "aksjdhakd"))
 except sqlite3.IntegrityError:
     print("asdhasd")
 c.execute("SELECT * from user_info WHERE username=\"hi\"")
-print(c.fetchall())
+print(c.fetchall())CONSTRAINT uni_title UNIQUE(title))
 '''
 
 
 def get_login(username, password):
     """
-    Gives Flask access to the existence of a user's info
+    Gives Flask access to the eCONSTRAINT uni_title UNIQUE(title))xistence of a user's info
     Gives Flask access to user's password for checking
     Returns the correct error message
     """
@@ -79,8 +79,12 @@ def create_story(title, user, entry):
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    print(entry)
-    c.execute("INSERT INTO story VALUES(?,?,?)", (title, user, entry))
+    str = ""
+    try:
+        c.execute("INSERT INTO story VALUES(?,?,?)", (title, user, entry))
+    except sqlite3.IntegrityError:
+        str = "title used"
+    return str
     db.commit()
 
 

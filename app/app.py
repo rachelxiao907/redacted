@@ -81,7 +81,10 @@ def disp_loginpage():
 def load_home():
     if(request.method == "POST"):
         if(request.form["type"] == "create"):
-            db.create_story(request.form['title'], session["login"],request.form['content'])
+            error=db.create_story(request.form['title'], session["login"],request.form['content'])
+            #doesn't work yet
+            #if(error != ""):
+            #    return redirect("/create")
         else:
             db.add_to_story(request.form["title"], session["login"],request.form["entry"])
 
