@@ -85,6 +85,8 @@ def create_story(title, user, entry):
 
     db.commit()
 
+    add_stories_contributed(title, user)
+
 
 
 # add to existing stories kind of works for now
@@ -125,26 +127,14 @@ def add_to_story(title, contributor, entry):
     #updates the database with the new dictionary
     c.execute("UPDATE story SET contributor = :contributor WHERE title =:title", dict)
     c.execute("UPDATE story SET entry = :entry WHERE title =:title", dict)
-
+    db.commit()
 
     # this is the add_stories_contributed part I just put it with add_to_story
 
 
-    c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
-    a = c.fetchall()
+    add_stories_contributed(title, contributor)
 
-    if(a[0][0] != ""):
-        stories_contributed = a[0][0] + "\n" + title
-    else:
-        stories_contributed = title
 
-    dict = {"stories_contributed":stories_contributed, "contributor":contributor}
-
-    c.execute("UPDATE user_info SET stories_contributed =:stories_contributed WHERE username = :contributor", dict)
-
-    c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
-
-    db.commit()
 # add_to_story test
 # add_to_story("story1", "user2", "world")
 
@@ -221,6 +211,24 @@ def get_story_last_entry (title):
         output_list.append(big_list[i][-1])
     return output_list
 
+def add_stories_contributed(title, contributor):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
+    a = c.fetchall()
+
+    if(a[0][0] != ""):
+        stories_contributed = a[0][0] + "\n" + title
+    else:
+        stories_contributed = title
+
+    dict = {"stories_contributed":stories_contributed, "contributor":contributor}
+
+    c.execute("UPDATE user_info SET stories_contributed =:stories_contributed WHERE username = :contributor", dict)
+
+    #c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
+
+    db.commit()
 
 def get_stories_contributed(username):
     """
