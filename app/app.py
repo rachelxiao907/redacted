@@ -85,7 +85,7 @@ def load_home():
         else:
             db.add_to_story(request.form["title"], session["login"],request.form["entry"])
 
-    return render_template('home.html') # render login page with an error message
+    return render_template('home.html', name = session["login"]) # render login page with an error message
 
 @app.route("/create_account", methods=['GET', 'POST'])
 def create_account_render():
