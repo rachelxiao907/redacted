@@ -35,6 +35,50 @@ c.execute("SELECT * from user_info WHERE username=\"hi\"")
 print(c.fetchall())
 '''
 
+
+def get_login(username, password):
+    """
+    Gives Flask access to the existence of a user's info
+    Gives Flask access to user's password for checking
+    Returns the correct error message
+    """
+    # avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = f"SELECT * FROM user_info WHERE (username = \"{username}\")" # check if username exists in the db
+    c.execute(command)
+    data = c.fetchall()
+    if(data == []): # no user exists
+        return "User Not Found"
+    elif(data[0][1] != password): # password is wrong
+        return "Incorrect password"
+    else:
+        return ""
+
+
+def add_login(username, password):
+    """
+    Used for creating an account
+    """
+    # avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    print(username)
+    command = "INSERT INTO user_info VALUES(?, ?, ?)"
+    c.execute(command, (username, password, "")) # add username and password pair to database
+                                                 # leave stories_contributed blank for now
+    db.commit() # commit changes to db
+
+
+def create_story(title, user, entry):
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    print(entry)
+    c.execute("INSERT INTO story VALUES(?,?,?)", (title, user,entry))
+    db.commit()
+
+
 # add to existing stories kind of works for now
 def add_to_story(title, contributor, entry):
 
@@ -182,36 +226,6 @@ def get_story_addable(username):
     return addable_stories
 
 
-def add_login(username, password):
-    #add_login would be used for creating account
-
-    # avoid thread error
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-    print(username)
-    command = "INSERT INTO user_info VALUES(?, ?, ?)"
-    c.execute(command, (username, password, "")) # add u/p pair to database, leave stories contributed blank for now
-    db.commit() # commit changes to db
-
-
-def get_login(username, password):
-    """
-    get_login would get password to flask for checking
-
-    """
-    # avoid thread error
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-    command = f"SELECT * FROM user_info WHERE (username = \"{username}\")" # check if username exists in the db
-    c.execute(command)
-    data = c.fetchall()
-    if(data == []): # no user exists
-        return "User Not Found"
-    elif(data[0][1] != password): # password is wrong
-        return "Username and password do not match"
-    else: # we good
-        return ""
-
 def get_stories_contributed(username):
     """
     get_stories_contributed would return the list of stories that
@@ -226,13 +240,3 @@ def get_stories_contributed(username):
     c.execute("SELECT stories_contributed FROM user_info WHERE username =:username", {"username": username})
     list = c.fetchall()[0][0].split("\n")
     return list
-
-
-
-def create_story(title, user, entry):
-        #avoid thread error
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-    print(entry)
-    c.execute("INSERT INTO story VALUES(?,?,?)", (title, user,entry))
-    db.commit()
