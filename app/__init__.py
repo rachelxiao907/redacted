@@ -12,12 +12,13 @@ app.secret_key = urandom(32) #generates random key
 
 @app.route("/", methods=['GET', 'POST'])
 def disp_loginpage():
-    data = []
+    data = [] #
     # check request method to use the right method for accessing inputs
     if (request.method == 'GET'):
         data = request.args
     else:
         data = request.form
+    #print(data) #ImmutableMultiDict([('username', 'a'), ('password', 'a'), ('sub1', 'Login')])
 
     if ('sub2' in data): # sub2 is the logout button. user clicking it puts sub2 into data and ends the session
         session['login'] = False # end session
@@ -39,8 +40,8 @@ def disp_loginpage():
         try:
             error = db.get_login(name_input, pass_input) # check if the user exists in database
             if(error == ""):
-                session["login"] = name_input
-                print("hello")
+                session["login"] = name_input # session username is stored
+                print("hello") #check is the username was stores
                 return redirect("/home") # render welcome page
         except Exception as e:
             error = e
@@ -52,9 +53,9 @@ def disp_loginpage():
 def load_home():
     if(request.method == 'POST'):
         if(request.form['type'] == 'create'):
-            db.create_story(request.form['title'], session["login"],request.form['content'])
+            db.create_story(request.form['title'], session["login"], request.form['content'])
         else:
-            db.add_to_story(request.form["title"], session["login"],request.form["entry"])
+            db.add_to_story(request.form["title"], session["login"], request.form["entry"])
 
     return render_template('home.html') # render login page with an error message
 
@@ -99,7 +100,7 @@ def create_account_render():
 # should be fixed when everything is linked together and with better testing
 @app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
-    story_list = db.get_story_addable(session["login"]) # what stories the user can add to
+    story_list = db.get_story_addable(session["login"]) # stories the user can add to
     #terminal testing prints
     #print("added to story")
     #print(get_story_last_entry(request.form["title"]))
