@@ -22,6 +22,9 @@ Added requirements.txt
 davidC -- 2021-11-01 09:25
 Edited home.html and create_account.html
 
+michaelB -- 2021-11-01 12:50
+Clean up login script to make it clearer and more efficient.
+
 yuqingW -- 2021-11-01 14:23
 Added backend function (get_addable_stories) that is used for /add page. 
 
