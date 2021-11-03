@@ -79,16 +79,18 @@ def disp_loginpage():
 
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
-    if(request.method == "POST"):
-        if(request.form["type"] == "create"):
-            error=db.create_story(request.form['title'], session["login"],request.form['content'])
-            #doesn't work yet
-            #if(error != ""):
-            #    return redirect("/create")
-        else:
-            db.add_to_story(request.form["title"], session["login"],request.form["entry"])
+    if("login" in session and not(session["login"] == False)):
+        if(request.method == "POST"):
+            if(request.form["type"] == "create"):
+                error=db.create_story(request.form['title'], session["login"],request.form['content'])
+                #doesn't work yet
+                #if(error != ""):
+                #    return redirect("/create")
+            else:
+                db.add_to_story(request.form["title"], session["login"],request.form["entry"])
 
-    return render_template('home.html', name = session["login"]) # render login page with an error message
+        return render_template('home.html', name = session["login"]) # render login page with an error message
+    return redirect("/")
 
 @app.route("/create_account", methods=['GET', 'POST'])
 def create_account_render():

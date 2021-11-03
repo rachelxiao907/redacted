@@ -45,3 +45,6 @@ Transferred app.py contents to __init__.py and cleaned up all the Python code.
 
 davidC -- 2021-11-03 09:08 
 Added username to homepage and created a back button for create page.
+
+michaelB -- 2021-11-03 09:35
+Fix error in which you can go to the home page without logging in.
