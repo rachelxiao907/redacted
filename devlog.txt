@@ -34,5 +34,8 @@ Started db.py functions for stories.
 rachelX -- 2021-11-02 16:54
 Started create story page and new route through flask.
 
+yuqingW -- 2021-11-02 18:40
+Putted everything together from /create page to /add pages. Now the app can create and add stories properly.
+
 rachelX -- 2021-11-02 23:50
-Transferred app.py contents to __innit__.py and cleaned up all the Python code.
+Transferred app.py contents to __init__.py and cleaned up all the Python code.
