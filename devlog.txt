@@ -33,3 +33,6 @@ Started db.py functions for stories.
 
 rachelX -- 2021-11-02 16:54
 Started create story page and new route through flask.
+
+rachelX -- 2021-11-02 23:50
+Transferred app.py contents to __innit__.py and cleaned up all the Python code.
