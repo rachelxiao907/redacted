@@ -1,7 +1,7 @@
-"""
+'''
 This would be the database file.
 Make sure to comment out the testing parts when you commit to github
-"""
+'''
 
 import sqlite3
 
@@ -59,6 +59,7 @@ def get_login(username, password):
 def add_login(username, password):
     """
     Used for creating an account
+    Add a new row for new username and password in user_info
     """
     # avoid thread error
     db = sqlite3.connect(DB_FILE)
@@ -71,17 +72,20 @@ def add_login(username, password):
 
 
 def create_story(title, user, entry):
+    """
+    Add to story table when a user creates a new story
+    We need to check if the title is already taken
+    """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     print(entry)
-    c.execute("INSERT INTO story VALUES(?,?,?)", (title, user,entry))
+    c.execute("INSERT INTO story VALUES(?,?,?)", (title, user, entry))
     db.commit()
 
 
 # add to existing stories kind of works for now
 def add_to_story(title, contributor, entry):
-
     """
     add_to_story would add entries and contributors of the entry to story database
     also add this story to the list of stories that the user stories_contributed
@@ -89,7 +93,6 @@ def add_to_story(title, contributor, entry):
 
     As of now it would add to the story every time the command is called, re running won't
     clear the database
-
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
@@ -139,11 +142,36 @@ def add_to_story(title, contributor, entry):
     c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
 
     db.commit()
-
-
 # add_to_story test
 # add_to_story("story1", "user2", "world")
 
+
+def get_story_addable(username):
+    """
+    This would get the stories that the user did not contribute to,
+    these are the stories that they can add to on the /add page
+    """
+    #avoid thread error
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    #titles of all stories, each title in a tuple
+    c.execute("SELECT title FROM story")
+    titles = c.fetchall()
+
+    stories_contributed = get_stories_contributed(username)
+
+    #for testing
+    #stories_contributed = ["story1"]
+
+    addable_stories = []
+
+    #if a story is not in stories_contributed, it's addable
+    for i in titles:
+        if ((i[0] in stories_contributed) == False):
+            addable_stories.append(i[0])
+
+    return addable_stories
 
 
 def get_story (title):
@@ -166,7 +194,6 @@ def get_story (title):
     for i in range(2):
         #split for each \n
         if(entry_list != []):
-
             output_list.append(entry_list[0][i].split('\n'))
 
     #diag print statement
@@ -175,14 +202,11 @@ def get_story (title):
     return output_list
 
 
-
 def get_story_last_entry (title):
-
     """
     get_story_last_entry gets the last entry for a story, returns
     the user contributed to the last entry and the last entry in a list
     [contributor, last_entry]
-
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
@@ -193,37 +217,6 @@ def get_story_last_entry (title):
     for i in range(2):
         output_list.append(big_list[i][-1])
     return output_list
-
-
-def get_story_addable(username):
-
-    """
-    This would get the stories that the user did not contribute to,
-    these are the stories that they can add to on the /add page
-
-    """
-    #avoid thread error
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-
-    #titles of all stories, each title in a tuple
-    c.execute("SELECT title FROM story")
-    titles = c.fetchall()
-
-    #uncomment when get_stories_contributed done
-    stories_contributed = get_stories_contributed(username)
-
-    #for testing
-    #stories_contributed = ["story1"]
-
-    addable_stories = []
-
-    #if a story is not in stories_contributed, it's addable
-    for i in titles:
-        if ((i[0] in stories_contributed) == False):
-            addable_stories.append(i[0])
-
-    return addable_stories
 
 
 def get_stories_contributed(username):
