@@ -39,3 +39,6 @@ Putted everything together from /create page to /add pages. Now the app can crea
 
 rachelX -- 2021-11-02 23:50
 Transferred app.py contents to __init__.py and cleaned up all the Python code.
+
+davidC -- 2021-11-03 09:08 
+Added username to homepage and created a back button for create page.
