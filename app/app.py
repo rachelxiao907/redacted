@@ -11,8 +11,8 @@ app = Flask(__name__)    #create Flask object
 app.secret_key = urandom(32) #generates random key
 
 """
-to see how everything work (Yuqing just tested for one user so)
-    create account & login
+To see how everything works (Yuqing just tested for one user so)
+    Create account & login
 
     Click create a story, enter fields.
 
