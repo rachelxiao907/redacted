@@ -57,3 +57,18 @@ Gave pathways to home page in the stories pages.
 
 rachelX -- 2021-11-03 22:22
 Checked if user is logged in for each route. If they aren't logged in, they are redirected.
+
+yuqingW -- 2021-11-04 09:16 
+Fixed spacing and \ and character length error in /add/<story> page
+
+davidC -- 2021-11-04 09:27
+Reformatted different pages, and added big text boxes for add_story.html and create.html
+
+davidC -- 2021-11-04 11:40
+Added more text to Home Page. Added placeholders and changed font for writing in home.html. Made pages cleaner
+
+rachelX -- 2021-11-04 12:15
+Put all the working code from app.py into __init__.py and edited some displays on website.
+
+rachelX -- 2021-11-04 12:27
+Modified messages of forms. Correctly routed create story form.
