@@ -44,19 +44,17 @@ def disp_loginpage():
         return render_template('login.html', error_message = error) # render login page with the correct error message
     return render_template('login.html') # otherwise render login page
 
-
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
-    if('login' in session and not(session['login'] == False)):
-        if(request.method == 'POST'):
-            if(request.form['type'] == 'create'): # input from create_story page
-                try:
-                    db.create_story(request.form['title'], session['login'],request.form['content'])
-                except sqlite3.IntegrityError:
-                    render_template('home.html', name = session['login'], error = 'Title already exists')
-            else: # input from add_<story> page
-                db.add_to_story(request.form['title'], session['login'],request.form['entry'])
-        return render_template('home.html', name = session['login']) # render home page with username
+    if("login" in session and not(session["login"] == False)):
+        if(request.method == "POST"):
+            db.add_to_story(request.form["title"], session["login"],request.form["entry"])
+        past_stories = db.get_stories_contributed(session["login"])
+        list_story = []
+        for i in past_stories:
+            list_story.append(db.get_story(i))
+
+        return render_template('home.html', name = session["login"], story_col = list_story) # render login page with an error message
     else:
         return redirect("/")
 
@@ -129,7 +127,7 @@ def create_story():
             #print(request.form)
             try:
                 db.create_story(request.form['title'], session["login"],request.form['content'])
-                return render_template('create.html', message = "You've created a story!")
+                return redirect("/home")
             except sqlite3.IntegrityError: # title is a unique type in the datatable
                 return render_template('create.html', message = "Title already exists")
         else:
