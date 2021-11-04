@@ -60,3 +60,6 @@ Checked if user is logged in for each route. If they aren't logged in, they are 
 
 yuqingW -- 2021-11-04 9:16 
 Fixed spacing and \ and character length error in /add/<story> page
+
+davidC -- 2021-11-04 09:27
+Reformatted different pages, and added big text boxes for add_story.html and create.html
