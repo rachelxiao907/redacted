@@ -1,8 +1,4 @@
-from flask import Flask             #facilitate flask webserving
-from flask import render_template   #facilitate jinja templating
-from flask import request           #facilitate form submission
-from flask import session           #allow for session creation/maintenance
-from flask import redirect
+from flask import Flask, render_template, request, session, redirect
 from os import urandom
 import db
 import sqlite3   #enable control of an sqlite database
@@ -51,13 +47,18 @@ def disp_loginpage():
 
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
-    if(request.method == 'POST'):
-        if(request.form['type'] == 'create'):
-            db.create_story(request.form['title'], session["login"], request.form['content'])
-        else:
-            db.add_to_story(request.form["title"], session["login"], request.form["entry"])
-
-    return render_template('home.html', name = session['login']) # render login page with an error message
+    if('login' in session and not(session['login'] == False)):
+        if(request.method == 'POST'):
+            if(request.form['type'] == 'create'): # input from create_story page
+                try:
+                    db.create_story(request.form['title'], session['login'],request.form['content'])
+                except sqlite3.IntegrityError:
+                    render_template('home.html', name = session['login'], error = 'Title already exists')
+            else: # input from add_<story> page
+                db.add_to_story(request.form['title'], session['login'],request.form['entry'])
+        return render_template('home.html', name = session['login']) # render home page with username
+    else:
+        return redirect("/")
 
 
 @app.route("/create_account", methods=['GET', 'POST'])
@@ -90,9 +91,7 @@ def create_account_render():
                 return redirect("/") # go back to main login page
             except sqlite3.IntegrityError: # error if the username is a duplicate
                 error = "Username already exists!"
-        # render the page after processing input
         return render_template('create_account.html', error_message = error)
-    # render the page
     return render_template('create_account.html')
 
 
@@ -100,22 +99,43 @@ def create_account_render():
 # should be fixed when everything is linked together and with better testing
 @app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
-    story_list = db.get_story_addable(session["login"]) # stories the user can add to
-    #terminal testing prints
-    #print("added to story")
-    #print(get_story_last_entry(request.form["title"]))
-    return render_template("add.html", collection = story_list)
+    if('login' in session and not(session['login'] == False)):
+        story_list = db.get_story_addable(session['login']) # stories the user can add to
+        #print("added to story")
+        #print(get_story_last_entry(request.form["title"]))
+        return render_template("add.html", collection = story_list)
+    else:
+        return redirect("/")
 
 # after submitting would go to the add page
 @app.route("/add/<story>")
-def add_a_story(story):
-    #displays the contributor and the last entry of story
-    last_entry = db.get_story_last_entry(story)
-    return render_template('add_story.html', last_contributor = last_entry[0], last_entry = last_entry[1], title = story)
+def add_a_story(story): # story is the title of the story
+    if('login' in session and not(session['login'] == False)):
+        last_entry = db.get_story_last_entry(story) # displays the contributor and the last entry of story
+        title = ""
+        for i in story: # makes url have _ replace the spaces
+            if i == " " or i == "\\":
+                title += "_"
+            else:
+                title += i
+        return render_template("add_story.html", last_contributor = last_entry[0], last_entry = last_entry[1], title = story)
+    else:
+        return redirect("/")
 
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
-    return render_template('create.html')
+    if('login' in session and not(session['login'] == False)):
+        if(request.method == 'POST'):
+            #print(request.form)
+            try:
+                db.create_story(request.form['title'], session["login"],request.form['content'])
+                return render_template('create.html', message = "You've created a story!")
+            except sqlite3.IntegrityError: # title is a unique type in the datatable
+                return render_template('create.html', message = "Title already exists")
+        else:
+            return render_template("create.html", message = "")
+    else:
+        return redirect("/")
 
 
 if __name__ == "__main__": #false if this file imported as module
