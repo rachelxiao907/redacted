@@ -47,8 +47,8 @@ def disp_loginpage():
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
     if('login' in session and not(session['login'] == False)):
-        if(request.method == 'POST' and request.form['type'] == 'home'): # input from add/<story> page
-            db.add_to_story(request.form['title'], session['login'],request.form['entry'])
+        if(request.method == 'POST' and not(request.form['title'] and request.form['entry'].strip())): # input from add/<story> page
+            db.add_to_story(request.form['title'], session['login'], request.form['entry'])
         past_stories = db.get_stories_contributed(session['login'])
         list_story = []
         for i in past_stories:
