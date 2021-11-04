@@ -46,15 +46,14 @@ def disp_loginpage():
 
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
-    if("login" in session and not(session["login"] == False)):
-        if(request.method == "POST"):
-            db.add_to_story(request.form["title"], session["login"],request.form["entry"])
-        past_stories = db.get_stories_contributed(session["login"])
+    if('login' in session and not(session['login'] == False)):
+        if(request.method == 'POST' and request.form['type'] == 'home'): # input from add/<story> page
+            db.add_to_story(request.form['title'], session['login'],request.form['entry'])
+        past_stories = db.get_stories_contributed(session['login'])
         list_story = []
         for i in past_stories:
             list_story.append(db.get_story(i))
-
-        return render_template('home.html', name = session["login"], story_col = list_story) # render login page with an error message
+        return render_template('home.html', name = session['login'], story_col = list_story) # render home page with username
     else:
         return redirect("/")
 
@@ -125,9 +124,14 @@ def create_story():
     if('login' in session and not(session['login'] == False)):
         if(request.method == 'POST'):
             #print(request.form)
+            if(not(request.form['title'] and request.form['title'].strip())):
+                return render_template('create.html', message = "Please have a title")
+            else:
+                if(not(request.form['content'] and request.form['content'].strip())):
+                    return render_template('create.html', message = "Please start the story")
             try:
-                db.create_story(request.form['title'], session["login"],request.form['content'])
-                return redirect("/home")
+                db.create_story(request.form['title'], session['login'],request.form['content'])
+                return render_template('create.html', message = "You've created a story!")
             except sqlite3.IntegrityError: # title is a unique type in the datatable
                 return render_template('create.html', message = "Title already exists")
         else:
