@@ -64,11 +64,11 @@ Fixed spacing and \ and character length error in /add/<story> page
 davidC -- 2021-11-04 09:27
 Reformatted different pages, and added big text boxes for add_story.html and create.html
 
-davidC -- 2021-11-04 11:29
-Added more text to Home Page. Switched names around and made look cleaner
-
 davidC -- 2021-11-04 11:40
-Added placeholders and changed font for writing in home.html, added a bit of text in login.html
+Added more text to Home Page. Added placeholders and changed font for writing in home.html. Made pages cleaner
 
 rachelX -- 2021-11-04 12:15
 Put all the working code from app.py into __init__.py and edited some displays on website.
+
+rachelX -- 2021-11-04 12:27
+Modified messages of forms. Correctly routed create story form.
