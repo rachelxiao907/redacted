@@ -91,7 +91,8 @@ def load_home():
                 db.add_to_story(request.form["title"], session["login"],request.form["entry"])
 
         return render_template('home.html', name = session["login"]) # render login page with an error message
-    return redirect("/")
+    else:
+        return redirect("/")
 
 
 @app.route("/create_account", methods=['GET', 'POST'])
@@ -136,36 +137,43 @@ def create_account_render():
 # should be fixed when everything is linked together and when i don't test with manual insert intos.
 @app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
-
+    if("login" in session and not(session["login"] == False)):
     #when you login the site, session["login"] would store which use is using
-    story_list = db.get_story_addable(session["login"])
+        story_list = db.get_story_addable(session["login"])
 
-        #terminal testing prints
-        #print("added to story")
-        #print(get_story_last_entry(request.form["title"]))
-    return render_template("add.html", collection = story_list)
+            #terminal testing prints
+            #print("added to story")
+            #print(get_story_last_entry(request.form["title"]))
+        return render_template("add.html", collection = story_list)
+    else:
+        return redirect("/")
 
 
 #after submitting would go to the add page
 @app.route("/add/<story>")
 def add_a_story(story):
-    #displays the contributor and the last entry of story
-    last_entry = db.get_story_last_entry(story)
-    return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
+    if("login" in session and not(session["login"] == False)):
+        #displays the contributor and the last entry of story
+        last_entry = db.get_story_last_entry(story)
+        return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
+    else:
+        return redirect("/")
 
 
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
-    if(request.method == "POST"):
-        print(request.form)
-        try:
-            db.create_story(request.form['title'], session["login"],request.form['content'])
-            return render_template('create.html', message = "You've created a story!" )
-        except sqlite3.IntegrityError:
-            return render_template('create.html', message = "Title already exists" )
-
+    if("login" in session and not(session["login"] == False)):
+        if(request.method == "POST"):
+            print(request.form)
+            try:
+                db.create_story(request.form['title'], session["login"],request.form['content'])
+                return render_template('create.html', message = "You've created a story!" )
+            except sqlite3.IntegrityError:
+                return render_template('create.html', message = "Title already exists" )
+        else:
+            return render_template("create.html", message = "")
     else:
-        return render_template("create.html", message = "")
+        return redirect("/")
 
 
 if __name__ == "__main__": #false if this file imported as module
