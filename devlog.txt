@@ -63,3 +63,6 @@ Fixed spacing and \ and character length error in /add/<story> page
 
 davidC -- 2021-11-04 09:27
 Reformatted different pages, and added big text boxes for add_story.html and create.html
+
+davidC -- 2021-11-04 11:29
+Added more text to Home Page, switched names around and made look cleaner
