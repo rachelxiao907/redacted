@@ -11,12 +11,12 @@
     <h3>
       Last Entry:
     </h3>
-    Last contributed by: <b>{{last_contributor}}</b><br/><br/>
-    {{last_entry}}<br/><br/>
 
+    {{last_entry}}<br/><br/>
+    Last contributed by: <b>{{last_contributor}}</b><br/>
     <!-- adding new entry -->
     <form action="/home" method="POST">
-      <label>Enter your entry:</label><br/><br/>
+      <h3>Add On!</h3>
       <!-- max length for entry is 300 characters -->
       <textarea id = "entry" name="entry" maxlength = "300" rows = "5" cols = "100" ></textarea><br><br>
       <!-- storing information of the title of story added to be passed to python script -->
