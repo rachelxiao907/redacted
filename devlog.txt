@@ -72,3 +72,6 @@ Put all the working code from app.py into __init__.py and edited some displays o
 
 rachelX -- 2021-11-04 12:27
 Modified messages of forms. Correctly routed create story form.
+
+yuqingW -- 2021-11-04 14:08
+Added past stories displaying on home page.
