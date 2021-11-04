@@ -22,8 +22,13 @@
         </p>
     <div>
 
-
-
+    {%for story in story_col%}
+    title: {{story[0]}}<br/>
+    {%for field in story[1] %}
+    user contributed: {{field}} <br/>
+    entry: {{story[2][loop.index0]}} <br/><br/>
+    {%endfor%}
+    {%endfor%}
   </body>
 
 </html>

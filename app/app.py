@@ -81,16 +81,13 @@ def disp_loginpage():
 def load_home():
     if("login" in session and not(session["login"] == False)):
         if(request.method == "POST"):
-            if(request.form["type"] == "create"):
-                try:
-                    db.create_story(request.form['title'], session["login"],request.form['content'])
-                except sqlite3.IntegrityError:
-                    render_template('home.html', name = session["login"], error = "title already exist")
+            db.add_to_story(request.form["title"], session["login"],request.form["entry"])
+        past_stories = db.get_stories_contributed(session["login"])
+        list_story = []
+        for i in past_stories:
+            list_story.append(db.get_story(i))
 
-            else:
-                db.add_to_story(request.form["title"], session["login"],request.form["entry"])
-
-        return render_template('home.html', name = session["login"]) # render login page with an error message
+        return render_template('home.html', name = session["login"], story_col = list_story) # render login page with an error message
     else:
         return redirect("/")
 
@@ -161,7 +158,8 @@ def add_a_story(story):
                 title+="_"
             else:
                 title += i
-        return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
+
+        return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = title)
     else:
         return redirect("/")
 
@@ -173,7 +171,7 @@ def create_story():
             print(request.form)
             try:
                 db.create_story(request.form['title'], session["login"],request.form['content'])
-                return render_template('create.html', message = "You've created a story!" )
+                return redirect("/home")
             except sqlite3.IntegrityError:
                 return render_template('create.html', message = "Title already exists" )
         else:
