@@ -10,11 +10,12 @@
         Start a Story
     </h1>
     <form action="/home" method="POST">
-      <label>Title:</label>
+      <h2> Title:</h2>
       <input type="text" name="title">
       <br><br>
-      <label>Content:</label>
-      <input type="text" name="content">
+      <h2> Content:</h2>
+      <textarea id="content" name="content" rows = "10" cols = "100">
+      </textarea>
       <input type="hidden" name="type" value="create">
       <br><br>
       <input type="submit" name="sub_create" value="Submit Story">
