@@ -155,6 +155,12 @@ def add_a_story(story):
     if("login" in session and not(session["login"] == False)):
         #displays the contributor and the last entry of story
         last_entry = db.get_story_last_entry(story)
+        title = ""
+        for i in story:
+            if i == " " or i == "\\":
+                title+="_"
+            else:
+                title += i
         return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
     else:
         return redirect("/")
