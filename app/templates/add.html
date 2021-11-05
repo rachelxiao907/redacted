@@ -12,9 +12,14 @@
     <br><br>
 
     <!-- loop through the story in story addable list -->
+    {% set title = "" %}
     {% for story in collection %}
+      {% set title = story %}
+      {% if " " in story%}
+        {% set title = story.replace(" ", "_") %}
+      {% endif %}
       <!-- have a link such that when user click on a story it would redirect to the page-->
-      <a href = http://127.0.0.1:5000/add/{{story}}> {{story}}</a>
+      <a href = http://127.0.0.1:5000/add/{{title}}> {{story}}</a>
       <br/><br/>
     {% endfor %}
   </body>

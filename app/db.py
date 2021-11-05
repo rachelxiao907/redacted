@@ -179,10 +179,10 @@ def get_story (title):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     #selects contributors and entry
-    c.execute("SELECT contributor, entry FROM story WHERE title = :title", {"title":title})
+    c.execute("SELECT contributor, entry FROM story WHERE title = VALUES(?)", (title))
     entry_list = c.fetchall()
     output_list = [title]
-
+    print(entry_list)
     #index 0 because tuple
     for i in range(2):
         #split for each \n
@@ -207,9 +207,9 @@ def get_story_last_entry (title):
     # use get_story in its implementation
     output_list = []
     big_list = get_story(title)
-    print(big_list)
     for i in range(2):
     	# [TITLE, [CONTRIBUTOR LIST], [ENTRY LIST]]
+        print(big_list)
         output_list.append(big_list[i+1][-1])
     return output_list
 

@@ -86,3 +86,6 @@ Created error messages for when title and content are blank.
 
 michaelB -- 2021-11-05 09:07
 Fix bug in which incorrect contributors and entries were being shown on add page.
+
+michaelB -- 2021-11-05 12:21
+Write for loop to replace spaces in title names with underscores.
