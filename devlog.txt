@@ -89,3 +89,6 @@ Fix bug in which incorrect contributors and entries were being shown on add page
 
 michaelB -- 2021-11-05 12:21
 Write for loop to replace spaces in title names with underscores.
+
+michaelB -- 2021-11-05 12:31
+Fix error where contributor and entry were not being found in the database (due to the query having underscores and the data not having them).

@@ -80,12 +80,14 @@ def create_story(title, user, entry):
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-
-    c.execute("INSERT INTO story VALUES(?,?,?)", (title, user, entry))
+    newtitle = title
+    if " " in title:
+        newtitle = title.replace(" ", "_")
+    c.execute("INSERT INTO story VALUES(?,?,?)", (newtitle, user, entry))
 
     db.commit()
 
-    add_stories_contributed(title, user)
+    add_stories_contributed(newtitle, user)
 
 
 
@@ -179,7 +181,7 @@ def get_story (title):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
     #selects contributors and entry
-    c.execute("SELECT contributor, entry FROM story WHERE title = VALUES(?)", (title))
+    c.execute("SELECT contributor, entry FROM story WHERE title = :title", {"title":title})
     entry_list = c.fetchall()
     output_list = [title]
     print(entry_list)
