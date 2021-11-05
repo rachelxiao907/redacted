@@ -158,7 +158,7 @@ def add_a_story(story):
                 title+="_"
             else:
                 title += i
-
+        print(last_entry)
         return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = title)
     else:
         return redirect("/")

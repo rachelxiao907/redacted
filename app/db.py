@@ -207,8 +207,10 @@ def get_story_last_entry (title):
     # use get_story in its implementation
     output_list = []
     big_list = get_story(title)
+    print(big_list)
     for i in range(2):
-        output_list.append(big_list[i][-1])
+    	# [TITLE, [CONTRIBUTOR LIST], [ENTRY LIST]]
+        output_list.append(big_list[i+1][-1])
     return output_list
 
 def add_stories_contributed(title, contributor):
