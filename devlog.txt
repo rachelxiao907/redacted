@@ -75,3 +75,6 @@ Modified messages of forms. Correctly routed create story form.
 
 yuqingW -- 2021-11-04 14:08
 Added past stories displaying on home page.
+
+rachelX -- 2021-11-04 19:04
+Created error messages for when title and content are blank.
