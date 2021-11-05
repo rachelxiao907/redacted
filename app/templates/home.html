@@ -18,22 +18,19 @@
     <a href= "http://127.0.0.1:5000/create"> Create a Story </a><br>
     </div>
     <div id = "refine">
-    <h4> Refine another Story! Add on to another forger's story with a maximum of 300 characters!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
+    <h4> Augment another Story! Add on to another forger's story with a maximum of 300 characters!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
     <a href = "http://127.0.0.1:5000/add"> Add to a Story </a> <br/><br/>
     </div>
     <div id = "own_stories">
     <h2> Your Stories </h2>
         <h4> Check out your Stories!  You will see BOTH your edits and the edits of forgers on every story you have either forged or refined!</h4>
-        <h3> title </h3>
-        <h4> by: authors? </h4>
-        <p> story </p>
     </div>
 
     {%for story in story_col%}
-    {{story[0]}}<br/>
+    <i><h3>{{story[0]}}</i></h3>
     {%for field in story[1] %}
-    user contributed: {{field}} <br/>
-    entry: {{story[2][loop.index0]}} <br/><br/>
+    entry: {{story[2][loop.index0]}} <br/>
+    user contributed: {{field}} <br/><br>
     {%endfor%}
     {%endfor%}
     
