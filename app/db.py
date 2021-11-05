@@ -171,7 +171,7 @@ def get_story (title):
     """
     get_story gets the entire story, returns the story entries and the different
     users that contributed to each entry in a list
-    [contributors_list, story_entry_list]
+    [titile, contributors_list, story_entry_list]
     Yuqing will code this part but Rachel should check since she's using it for the
     past story part in /home page
     """
@@ -181,7 +181,7 @@ def get_story (title):
     #selects contributors and entry
     c.execute("SELECT contributor, entry FROM story WHERE title = :title", {"title":title})
     entry_list = c.fetchall()
-    output_list = []
+    output_list = [title]
 
     #index 0 because tuple
     for i in range(2):
