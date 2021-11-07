@@ -14,26 +14,27 @@
       <input type="submit" value="Logout" name="sub2">
     </form>
     <div id = "forge">
-    <h4> Forge your own story! Create a Story with a title and story, any length you want!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
-    <a href= "http://127.0.0.1:5000/create"> Create a Story </a><br>
+      <h4> Forge your own story! Create a Story with a title and story, any length you want!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
+      <a href= "http://127.0.0.1:5000/create"> Create a Story </a><br>
     </div>
+
     <div id = "refine">
-    <h4> Augment another Story! Add on to another forger's story with a maximum of 300 characters!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
-    <a href = "http://127.0.0.1:5000/add"> Add to a Story </a> <br/><br/>
+      <h4> Augment another Story! Add on to another forger's story with a maximum of 300 characters!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
+      <a href = "http://127.0.0.1:5000/add"> Add to a Story </a> <br/><br/>
     </div>
+
     <div id = "own_stories">
     <h2> Your Stories </h2>
         <h4> Check out your Stories!  You will see BOTH your edits and the edits of forgers on every story you have either forged or refined!</h4>
     </div>
 
     {%for story in story_col%}
-    <i><h3>{{story[0]}}</i></h3>
-    {%for field in story[1] %}
-    entry: {{story[2][loop.index0]}} <br/>
-    user contributed: {{field}} <br/><br>
+      <i><h3>{{story[0]}}</i></h3>
+      {%for field in story[1] %}
+        {{story[2][loop.index0]}}
+      {%endfor%}
     {%endfor%}
-    {%endfor%}
-    
+
   </body>
 
 </html>
