@@ -166,14 +166,19 @@ def add_a_story(story):
 
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
-    if("login" in session and not(session["login"] == False)):
-        if(request.method == "POST"):
-            print(request.form)
+    if('login' in session and not(session['login'] == False)):
+        if(request.method == 'POST'):
+            #print(request.form)
+            if(not(request.form['title'] and request.form['title'].strip())):
+                return render_template('create.html', message = "Please have a title")
+            else:
+                if(not(request.form['content'] and request.form['content'].strip())):
+                    return render_template('create.html', message = "Please start the story")
             try:
-                db.create_story(request.form['title'], session["login"],request.form['content'])
-                return redirect("/home")
-            except sqlite3.IntegrityError:
-                return render_template('create.html', message = "Title already exists" )
+                db.create_story(request.form['title'], session['login'],request.form['content'])
+                return render_template('create.html', message = "You've created a story!")
+            except sqlite3.IntegrityError: # title is a unique type in the datatable
+                return render_template('create.html', message = "Title already exists")
         else:
             return render_template("create.html", message = "")
     else:

@@ -37,8 +37,8 @@ def disp_loginpage():
             error = db.get_login(name_input, pass_input) # check if the user exists in database
             if(error == ""):
                 session["login"] = name_input # session username is stored
-                print("hello") #check is the username was stores
-                return redirect("/home") # render welcome page
+                #print("hello") #check is the username was stores
+                return redirect("/home") # render landing page
         except Exception as e:
             error = e
         return render_template('login.html', error_message = error) # render login page with the correct error message
@@ -51,7 +51,7 @@ def load_home():
             db.add_to_story(request.form['title'], session['login'], request.form['entry'])
         past_stories = db.get_stories_contributed(session['login'])
         list_story = []
-        for i in past_stories:
+        for i in past_stories: # for ever title in the list of stories contributed
             list_story.append(db.get_story(i))
         return render_template('home.html', name = session['login'], story_col = list_story) # render home page with username
     else:
@@ -92,8 +92,6 @@ def create_account_render():
     return render_template('create_account.html')
 
 
-# stories got added is weird because of the number of times the scripts in db file is called
-# should be fixed when everything is linked together and with better testing
 @app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
     if('login' in session and not(session['login'] == False)):
@@ -104,7 +102,7 @@ def add_story_list():
     else:
         return redirect("/")
 
-# after submitting would go to the add page
+
 @app.route("/add/<story>")
 def add_a_story(story): # story is the title of the story
     if('login' in session and not(session['login'] == False)):
@@ -115,6 +113,7 @@ def add_a_story(story): # story is the title of the story
                 title += "_"
             else:
                 title += i
+        #print(last_entry)
         return render_template("add_story.html", last_contributor = last_entry[0], last_entry = last_entry[1], title = story)
     else:
         return redirect("/")
