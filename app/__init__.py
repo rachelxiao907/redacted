@@ -44,11 +44,16 @@ def disp_loginpage():
         return render_template('login.html', error_message = error) # render login page with the correct error message
     return render_template('login.html') # otherwise render login page
 
+
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
     if('login' in session and not(session['login'] == False)):
         if(request.method == 'POST'): # input from add/<story> page
-            db.add_to_story(request.form['title'], session['login'], request.form['entry'])
+            entry_list = request.form['entry'].split('\n')
+            #print(entry_list)
+            entry = ' '.join(entry_list)
+            #print(entry)
+            db.add_to_story(request.form['title'], session['login'], entry)
         past_stories = db.get_stories_contributed(session['login'])
         list_story = []
         for i in past_stories: # for ever title in the list of stories contributed
@@ -107,12 +112,6 @@ def add_story_list():
 def add_a_story(story): # story is the title of the story
     if('login' in session and not(session['login'] == False)):
         last_entry = db.get_story_last_entry(story) # displays the contributor and the last entry of story
-        title = ""
-        for i in story: # makes url have _ replace the spaces
-            if i == " " or i == "\\":
-                title += "_"
-            else:
-                title += i
         #print(last_entry)
         return render_template("add_story.html", last_contributor = last_entry[0], last_entry = last_entry[1], title = story)
     else:
@@ -129,7 +128,9 @@ def create_story():
                 if(not(request.form['content'] and request.form['content'].strip())):
                     return render_template('create.html', message = "Please start the story")
             try:
-                db.create_story(request.form['title'], session['login'],request.form['content'])
+                content_list = request.form['content'].split('\n')
+                content = ' '.join(content_list)
+                db.create_story(request.form['title'], session['login'], content)
                 return render_template('create.html', message = "You've created a story!")
             except sqlite3.IntegrityError: # title is a unique type in the datatable
                 return render_template('create.html', message = "Title already exists")
