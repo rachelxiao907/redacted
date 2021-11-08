@@ -98,3 +98,6 @@ Fix error where you could add to a story multiple times by typing localhost:5000
 
 rachelX -- 2021-11-08 09:21
 Made entries to stories replace \n with spaces. Fixes error of not displaying content after a \n.
+
+michaelB -- 2021-11-08 09:24
+Change some redirects from / to /home.

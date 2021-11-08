@@ -143,7 +143,7 @@ def add_story_list():
             #print(get_story_last_entry(request.form["title"]))
         return render_template("add.html", collection = story_list)
     else:
-        return redirect("/")
+        return redirect("/home")
 
 
 #after submitting would go to the add page
@@ -156,7 +156,7 @@ def add_a_story(story):
             last_entry = db.get_story_last_entry(story)
             print(last_entry)
             return render_template("add_story.html", last_contributor=last_entry[0],last_entry = last_entry[1], title = story)
-    return redirect("/")
+    return redirect("/home")
 
 
 @app.route("/create", methods=['GET', 'POST'])
@@ -177,7 +177,7 @@ def create_story():
         else:
             return render_template("create.html", message = "")
     else:
-        return redirect("/")
+        return redirect("/home")
 
 
 if __name__ == "__main__": #false if this file imported as module
