@@ -95,3 +95,6 @@ Fix error where contributor and entry were not being found in the database (due 
 
 michaelB -- 2021-11-08 09:16
 Fix error where you could add to a story multiple times by typing localhost:5000/add/<story_name> into the browser.
+
+rachelX -- 2021-11-08 09:21
+Made entries to stories replace \n with spaces. Fixes error of not displaying content after a \n.
