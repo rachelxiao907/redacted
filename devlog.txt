@@ -92,3 +92,6 @@ Write for loop to replace spaces in title names with underscores.
 
 michaelB -- 2021-11-05 12:31
 Fix error where contributor and entry were not being found in the database (due to the query having underscores and the data not having them).
+
+michaelB -- 2021-11-08 09:16
+Fix error where you could add to a story multiple times by typing localhost:5000/add/<story_name> into the browser.
