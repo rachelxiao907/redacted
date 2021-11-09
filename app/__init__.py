@@ -47,7 +47,7 @@ def disp_loginpage():
 
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
-    if('login' in session and not(session['login'] == False)):
+    if('login' in session and session['login'] != False):
         if(request.method == 'POST'): # input from add/<story> page
             entry_list = request.form['entry'].split('\n')
             #print(entry_list)
@@ -99,7 +99,7 @@ def create_account_render():
 
 @app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
-    if('login' in session and not(session['login'] == False)):
+    if('login' in session and session['login'] != False):
         story_list = db.get_story_addable(session['login']) # stories the user can add to
         #print("added to story")
         #print(get_story_last_entry(request.form["title"]))
@@ -120,7 +120,7 @@ def add_a_story(story): # story is the title of the story
 
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
-    if('login' in session and not(session['login'] == False)):
+    if('login' in session and session['login'] != False):
         if(request.method == 'POST'):
             #print(request.form)
             if(not(request.form['title'] and request.form['title'].strip())):
