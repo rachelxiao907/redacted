@@ -134,7 +134,7 @@ def create_account_render():
 # should be fixed when everything is linked together and when i don't test with manual insert intos.
 @app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
-    if("login" in session and not(session["login"] == False)):
+    if("login" in session and not(session["login"] == False) and not(db.get_story_addable(session["login"]) == [])):
     #when you login the site, session["login"] would store which use is using
         story_list = db.get_story_addable(session["login"])
 
@@ -142,6 +142,9 @@ def add_story_list():
             #print("added to story")
             #print(get_story_last_entry(request.form["title"]))
         return render_template("add.html", collection = story_list)
+    elif("login" in session and not(session["login"] == False) and(db.get_story_addable(session["login"]) == [])):
+        story_list = db.get_story_addable(session["login"])
+        return render_template("add.html", collection = story_list, error = "Nothing yet...")
     else:
         return redirect("/home")
 
