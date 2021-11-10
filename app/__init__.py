@@ -128,13 +128,13 @@ def create_story():
             else:
                 if(not(request.form['content'] and request.form['content'].strip())):
                     return render_template('create.html', message = "Please start the story")
-            try:
                 content_list = request.form['content'].split('\n')
                 content = ' '.join(content_list)
+            try:
                 db.create_story(request.form['title'], session['login'], content)
                 return render_template('create.html', message = "You've created a story!")
             except sqlite3.IntegrityError: # title is a unique type in the datatable
-                return render_template('create.html', message = "Title already exists")
+                return render_template('create.html', message = "Title already exists", story = content)
         else:
             return render_template("create.html", message = "")
     else:
