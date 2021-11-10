@@ -1,6 +1,5 @@
 '''
-This would be the database file.
-Make sure to comment out the testing parts when you commit to github
+This file contains methods that accesses and add to the database.
 '''
 
 import sqlite3
@@ -21,61 +20,72 @@ c.execute (command + "user_info (username TEXT, password TEXT, stories_contribut
 # creating table with story title | user contributed | story entry
 c.execute (command + "story (title TEXT type UNIQUE, contributor TEXT, entry TEXT)")
 
-#c.execute("INSERT INTO story VALUES(?, ?,?)", ("a","a","a"))
-#c.execute("INSERT INTO story VALUES(?, ?,?)", ("a","a","a"))
-
-'''
-# -- testing --
-c.execute("INSERT INTO user_info VALUES(?, ?)", ("hi", "bye"))
-c.execute("INSERT INTO user_info VALUES(?, ?)", ("hiakjsdhajsdhkajsdgh", "bye"))
-try:
-    c.execute("INSERT INTO userCONSTRAINT uni_title UNIQUE(title))_info VALUES(?, ?)", ("hi", "aksjdhakd"))
-except sqlite3.IntegrityError:
-    print("asdhasd")
-c.execute("SELECT * from user_info WHERE username=\"hi\"")
-print(c.fetchall())CONSTRAINT uni_title UNIQUE(title))
-'''
-
-
 def get_login(username, password):
     """
-    Gives Flask access to the eCONSTRAINT uni_title UNIQUE(title))xistence of a user's info
-    Gives Flask access to user's password for checking
-    Returns the correct error message
+    Returns the correct error message when the user is logging in.
+
+        Parameters:
+            username (str): The username that the user entered
+            password (str): The password that the user entered
+
+        Returns:
+            "User Not Found": Username does not match any entry in the database
+            "Incorrect Password": Username is found in the database but password doesn't match
+            "": Username and password matches
+
     """
     # avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    command = f"SELECT * FROM user_info WHERE (username = \"{username}\")" # check if username exists in the db
+
+    # check if username exists in the db
+    command = f"SELECT * FROM user_info WHERE (username = \"{username}\")"
     c.execute(command)
     data = c.fetchall()
-    if(data == []): # no user exists
+
+    # no user exists
+    if(data == []):
         return "User Not Found"
-    elif(data[0][1] != password): # password is wrong
-        return "Incorrect password"
+
+    # password is wrong
+    elif(data[0][1] != password):
+        return "Incorrect Password"
+
+    # username and password is correct
     else:
         return ""
 
 
 def add_login(username, password):
     """
-    Used for creating an account
-    Add a new row for new username and password in user_info
+    Creates an account in the database
+    Adds a new row for new username and password in user_info table in database
+
+        Parameters:
+            username (str): The username that the user entered
+            password (str): The password that the user entered
     """
+
     # avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    print(username)
+
+    # add username and password pair to database, no stories_contributed blank at account creation
     command = "INSERT INTO user_info VALUES(?, ?, ?)"
-    c.execute(command, (username, password, "")) # add username and password pair to database
-                                                 # leave stories_contributed blank for now
-    db.commit() # commit changes to db
+    c.execute(command, (username, password, ""))
+
+    # commit changes to db
+    db.commit()
 
 
 def create_story(title, user, entry):
     """
-    Add to story table when a user creates a new story
-    We need to check if the title is already taken
+    Add a story to the story table in database
+
+        Parameters:
+            title (str): The title of the story that the user entered
+            user (str): The user that creates the story
+            entry (str): The text that the user entered as the entry of the story
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
@@ -104,41 +114,32 @@ def add_to_story(title, contributor, entry):
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+
     # creates a dictionary to facilitate argument passing in the future
     dict = {"title":title, "contributor":contributor, "entry": entry}
-    #print(dict)
 
     # get the contributor and entry from the current story
     command = "SELECT contributor, entry FROM story WHERE title=:title"
     c.execute(command, dict) # the field in dict would replace :title
     contributor_entry_list = c.fetchall() #stores the information. It's a list of tuple, so kind of like 2D array
-    #print(contributor_entry_list)
+
 
     # add new information to contributor and entry through string concatenation, separated with \n
-    #print(contributor_entry_list)
     entry_dict = contributor_entry_list[0][1] + "\n" + entry
     contributor_dict = contributor_entry_list[0][0] + "\n" + contributor
-
-    #print(contributor)
 
     # reset the dictionary to contain the most recent information
     dict['contributor'] = contributor_dict
     dict['entry'] = entry_dict
-    #print(dict)
 
     #updates the database with the new dictionary
     c.execute("UPDATE story SET contributor = :contributor WHERE title =:title", dict)
     c.execute("UPDATE story SET entry = :entry WHERE title =:title", dict)
     db.commit()
 
-    # this is the add_stories_contributed part I just put it with add_to_story
-
-
     add_stories_contributed(title, contributor)
 
 
-# add_to_story test
-# add_to_story("story1", "user2", "world")
 
 
 def get_story_addable(username):
