@@ -8,6 +8,11 @@ app.secret_key = urandom(32) #generates random key
 
 @app.route("/", methods=['GET', 'POST'])
 def disp_loginpage():
+    '''
+    Renders the login page where users can login or be redirected accordingly.
+        Takes user inputs from the main page and checks the username/password against the database.
+        Check if there is a session to redirect user to the landing page if user is logged in.
+    '''
     data = [] #
     # check request method to use the right method for accessing inputs
     if (request.method == 'GET'):
@@ -47,11 +52,15 @@ def disp_loginpage():
 
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
-    if('login' in session and session['login'] != False):
+    '''
+    Renders landing page that displays all the stories the user has contributed to when they have logged in.
+    Stores user inputs of adding to a story as the user is redirected to the landing page after submitting.
+    '''
+    if('login' in session and session['login'] != False): # user can only access the other pages if they are logged in
         if(request.method == 'POST'): # input from add/<story> page
             entry_list = request.form['entry'].split('\n')
             #print(entry_list)
-            entry = ' '.join(entry_list)
+            entry = ' '.join(entry_list) # replace new lines with spaces
             #print(entry)
             db.add_to_story(request.form['title'], session['login'], entry)
         past_stories = db.get_stories_contributed(session['login'])
@@ -65,6 +74,11 @@ def load_home():
 
 @app.route("/create_account", methods=['GET', 'POST'])
 def create_account_render():
+    '''
+    Renders the page that holds a create account form.
+        Creates account only if the username is unique in the database, if the user's passwords match,
+        and if it passes the requirements.
+    '''
     if('username' in request.form or 'username' in request.args): # check if input exists by checking if username input is in request dictionary
         name_input = "" #username input
         pass_input = "" #password input
@@ -90,7 +104,7 @@ def create_account_render():
         else:
             try:
                 db.add_login(name_input, pass_input) # try to add u/p pair to db
-                return redirect("/") # go back to main login page
+                return redirect("/") # go back to login page
             except sqlite3.IntegrityError: # error if the username is a duplicate
                 error = "Username already exists!"
         return render_template('create_account.html', error_message = error)
@@ -99,7 +113,10 @@ def create_account_render():
 
 @app.route("/add", methods=['GET', 'POST'])
 def add_story_list():
-    if('login' in session and session['login'] != False):
+    '''
+    Renders the add page which displays all the stories the user can contribute to.
+    '''
+    if('login' in session and session['login'] != False): # user can only access the other pages if they are logged in
         story_list = db.get_story_addable(session['login']) # stories the user can add to
         #print("added to story")
         #print(get_story_last_entry(request.form["title"]))
@@ -110,7 +127,10 @@ def add_story_list():
 
 @app.route("/add/<story>")
 def add_a_story(story): # story is the title of the story
-    if('login' in session and not(session['login'] == False)):
+    '''
+    Renders the specific page for a story and displays the last entry and contributor on the page.
+    '''
+    if('login' in session and not(session['login'] == False)): # user can only access the other pages if they are logged in
         story_list = db.get_story_addable(session['login']) # displays the contributor and the last entry of story
         if(story in story_list):
             last_entry = db.get_story_last_entry(story)
@@ -118,16 +138,23 @@ def add_a_story(story): # story is the title of the story
     else:
         return redirect("/home")
 
+
 @app.route("/create", methods=['GET', 'POST'])
 def create_story():
-    if('login' in session and session['login'] != False):
+    '''
+    Takes inputs from the create story form and displays error messages depending on the user's title and story inputs.
+        Checks if the title is unique and has slashes because the title will have a url.
+    '''
+    if('login' in session and session['login'] != False): # user can only access the other pages if they are logged in
         if(request.method == 'POST'):
             #print(request.form)
-            if(not(request.form['title'] and request.form['title'].strip())):
+            if(not(request.form['title'] and request.form['title'].strip())): # if title is blank or only has spaces
                 return render_template('create.html', message = "Please have a title")
+            elif(not(request.form['content'] and request.form['content'].strip())): # if story is blank
+                return render_template('create.html', message = "Please start the story")
+            elif("/" in request.form['title'] or "\\" in request.form['title']): # slashes are special characters that affect the url
+                return render_template('create.html', message = "Please omit slashes in the title")
             else:
-                if(not(request.form['content'] and request.form['content'].strip())):
-                    return render_template('create.html', message = "Please start the story")
                 content_list = request.form['content'].split('\n')
                 content = ' '.join(content_list)
             try:

@@ -11,6 +11,8 @@ app = Flask(__name__)    #create Flask object
 app.secret_key = urandom(32) #generates random key
 
 """
+This file is used as a first draft of our code. We transfer good and working code to __init__ from here.
+
 To see how everything works (Yuqing just tested for one user so)
     Create account & login
 
