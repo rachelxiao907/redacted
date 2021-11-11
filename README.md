@@ -31,8 +31,8 @@ $ git clone https://github.com/rachelxiao907/redacted.git
 ### Install Libraries Contained in ``` requirements.txt```
 
 ```shell
-$ cd <path_to_redacted>
-$ pip3 install -r requirements.txt 
+(<venv_name>)$ cd <path_to_redacted>
+(<venv_name>)$ pip3 install -r requirements.txt 
 ```
 
 ### Run Program
