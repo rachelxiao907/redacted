@@ -14,10 +14,10 @@ c = db.cursor()
 #create tables for database
 command = "CREATE TABLE IF NOT EXISTS "
 
-# Creating table with username | password | stories contributed table
-c.execute (command + "user_info (username TEXT, password TEXT, stories_contributed TEXT, CONSTRAINT uni_user UNIQUE(username))") # vals in username col must be unique
+# Creating table that contains username | password | stories contributed, usernames must be unique
+c.execute (command + "user_info (username TEXT, password TEXT, stories_contributed TEXT, CONSTRAINT uni_user UNIQUE(username))")
 
-# creating table with story title | user contributed | story entry
+# creating table with story title | user contributed | story entry, titles must be unique
 c.execute (command + "story (title TEXT type UNIQUE, contributor TEXT, entry TEXT)")
 
 def get_login(username, password):
@@ -64,6 +64,9 @@ def add_login(username, password):
         Parameters:
             username (str): The username that the user entered
             password (str): The password that the user entered
+
+        Returns:
+            None
     """
 
     # avoid thread error
@@ -86,30 +89,43 @@ def create_story(title, user, entry):
             title (str): The title of the story that the user entered
             user (str): The user that creates the story
             entry (str): The text that the user entered as the entry of the story
+
+        Throws:
+            sqlite3.IntegrityError: title already exists
+
+        Returns:
+            None
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+
+    # replace " " with "_" because web url can't have space
     newtitle = title
     if " " in title:
         newtitle = title.replace(" ", "_")
+
+    # add to story table, throws sqlite3.IntegrityError if title repeats.
     c.execute("INSERT INTO story VALUES(?,?,?)", (newtitle, user, entry))
 
+    #save changes to database
     db.commit()
 
+    # mark this story as being contributed by the user
     add_stories_contributed(newtitle, user)
 
 
-
-# add to existing stories kind of works for now
 def add_to_story(title, contributor, entry):
     """
-    add_to_story would add entries and contributors of the entry to story database
-    also add this story to the list of stories that the user stories_contributed
-    returns nothing
+    Add an entry and the contributor of that entry to story table
 
-    As of now it would add to the story every time the command is called, re running won't
-    clear the database
+        Parameters:
+            title (str): The title of the story that the user adds to
+            contributor (str): The user that adds to the story
+            entry (str): The text that the user entered as the entry of the story
+
+        Returns:
+            None
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
@@ -120,9 +136,10 @@ def add_to_story(title, contributor, entry):
 
     # get the contributor and entry from the current story
     command = "SELECT contributor, entry FROM story WHERE title=:title"
-    c.execute(command, dict) # the field in dict would replace :title
-    contributor_entry_list = c.fetchall() #stores the information. It's a list of tuple, so kind of like 2D array
-
+    # the field in dict would replace :title
+    c.execute(command, dict)
+    #stores the information as a list of tuples
+    contributor_entry_list = c.fetchall()
 
     # add new information to contributor and entry through string concatenation, separated with \n
     entry_dict = contributor_entry_list[0][1] + "\n" + entry
@@ -137,6 +154,7 @@ def add_to_story(title, contributor, entry):
     c.execute("UPDATE story SET entry = :entry WHERE title =:title", dict)
     db.commit()
 
+    #mark this story as being contributed by the user
     add_stories_contributed(title, contributor)
 
 
@@ -144,25 +162,28 @@ def add_to_story(title, contributor, entry):
 
 def get_story_addable(username):
     """
-    This would get the stories that the user did not contribute to,
-    these are the stories that they can add to on the /add page
+    Returns titles of the stories that a user can add to
+
+        Parameters:
+            username (str): The user that the function is checking for
+
+        Returns:
+            addable_stories ([title1 (str), title2 (str), ... ]), the titles of the stories that the user has not contributed to
     """
-    #avoid thread error
+    # avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
-    #titles of all stories, each title in a tuple
+    # titles of all stories, each title in a tuple
     c.execute("SELECT title FROM story")
     titles = c.fetchall()
 
+    # gets the stories contributed by the user
     stories_contributed = get_stories_contributed(username)
-
-    #for testing
-    #stories_contributed = ["story1"]
 
     addable_stories = []
 
-    #if a story is not in stories_contributed, it's addable
+    # add stories not contributed by the user to addable_stories
     for i in titles:
         if ((i[0] in stories_contributed) == False):
             addable_stories.append(i[0])
@@ -172,80 +193,109 @@ def get_story_addable(username):
 
 def get_story (title):
     """
-    get_story gets the entire story, returns the story entries and the different
-    users that contributed to each entry in a list
-    [titile, contributors_list, story_entry_list]
-    Yuqing will code this part but Rachel should check since she's using it for the
-    past story part in /home page
+    Returns all entries and users contributed to those entries of a story
+        Parameters:
+            title (str): title of the story
+
+        Returns:
+            story_list ([title (str), [contributor1 (str), contributor2 (str), ... ], [entry1 (str), entry2 (str), ...]]):
+                the title, list of contributors, and list of entries to a story
+
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+
     #selects contributors and entry
     c.execute("SELECT contributor, entry FROM story WHERE title = :title", {"title":title})
-    entry_list = c.fetchall()
-    output_list = [title]
-    print(entry_list)
-    #index 0 because tuple
-    for i in range(2):
-        #split for each \n
-        if(entry_list != []):
-            output_list.append(entry_list[0][i].split('\n'))
 
-    #diag print statement
-    #print(output_list)
-    #print(get_story.__doc__)
-    return output_list
+    #[(contributor str, entries str)]
+    entry_list = c.fetchall()
+    story_list = [title]
+
+    # add contributors and entries to story list
+    for i in range(2):
+        #split on each \n
+        if(entry_list != []):
+            story_list.append(entry_list[0][i].split('\n'))
+
+    return story_list
 
 
 def get_story_last_entry (title):
     """
-    get_story_last_entry gets the last entry for a story, returns
-    the user contributed to the last entry and the last entry in a list
-    [contributor, last_entry]
+    Returns the last entry for a story and the user contributed to that entry
+
+        Parameters:
+            title (str): title of the story
+
+        Returns:
+            last_entry_list ([contributor (str), last_entry (str)]):
+                the user contributed to the last entry and the last entry
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    # use get_story in its implementation
-    output_list = []
+
+    # use get_story to get the entire story
+    last_entry_list = []
     big_list = get_story(title)
+
+    # get last entry
     for i in range(2):
-    	# [TITLE, [CONTRIBUTOR LIST], [ENTRY LIST]]
-        print(big_list)
-        output_list.append(big_list[i+1][-1])
-    return output_list
+        # only want the contributor and entry but not the title
+        last_entry_list.append(big_list[i+1][-1])
+
+    return last_entry_list
 
 def add_stories_contributed(title, contributor):
+    """
+    Adds a story to a user's stories_contributed column in the user_info table
+
+        Parameters:
+            title (str): title of the story that the user adds to
+            contributor (str): the user that adds to the story
+
+        Returns:
+            None
+    """
+    #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+
+    # get the stories that the user has contributed
     c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
     a = c.fetchall()
 
+    # append this story to the list
     if(a[0][0] != ""):
         stories_contributed = a[0][0] + "\n" + title
     else:
         stories_contributed = title
 
+    #update the database
     dict = {"stories_contributed":stories_contributed, "contributor":contributor}
-
     c.execute("UPDATE user_info SET stories_contributed =:stories_contributed WHERE username = :contributor", dict)
-
-    #c.execute("SELECT stories_contributed FROM user_info WHERE username =:contributor", {"contributor": contributor})
 
     db.commit()
 
 def get_stories_contributed(username):
     """
-    get_stories_contributed would return the list of stories that
-    the user contributed
-    Rachel will do this and determine what exactly it returns, whether it's the
-    titles and then call get_story or the entire thing is ready for flask
+    Return the titles of the stories that the user contributed to
+
+        Parameters:
+            username (str): the user that we are getting
+
+        Returns:
+            stories_contributed ([title1 (str), title2 (str), ...]):
+                the titles of the stories that the user contributed to
     """
     #avoid thread error
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
 
+    # gets the stories that the user contributed to
     c.execute("SELECT stories_contributed FROM user_info WHERE username =:username", {"username": username})
-    list = c.fetchall()[0][0].split("\n")
-    return list
+    stories_contributed = c.fetchall()[0][0].split("\n")
+    
+    return stories_contributed
