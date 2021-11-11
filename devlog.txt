@@ -104,3 +104,6 @@ Change some redirects from / to /home.
 
 davidC -- 2021-11-09 09:24
 Added message if there arent any stories in the viewable stories
+
+rachelX -- 2021-11-11 12:34
+Created Docstrings for the methods in __init__. Prevented user from creating titles with slashes.
