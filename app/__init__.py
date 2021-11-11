@@ -8,6 +8,11 @@ app.secret_key = urandom(32) #generates random key
 
 @app.route("/", methods=['GET', 'POST'])
 def disp_loginpage():
+    '''
+    Renders the login page where users can login or be redirected accordingly.
+        Takes user inputs from the main page and checks the username/password against the database.
+        Check if there is a session to redirect user to the landing page if user is logged in.
+    '''
     data = [] #
     # check request method to use the right method for accessing inputs
     if (request.method == 'GET'):
@@ -47,6 +52,9 @@ def disp_loginpage():
 
 @app.route("/home", methods=['GET', 'POST'])
 def load_home():
+    '''
+
+    '''
     if('login' in session and session['login'] != False):
         if(request.method == 'POST'): # input from add/<story> page
             entry_list = request.form['entry'].split('\n')
@@ -123,11 +131,13 @@ def create_story():
     if('login' in session and session['login'] != False):
         if(request.method == 'POST'):
             #print(request.form)
-            if(not(request.form['title'] and request.form['title'].strip())):
+            if(not(request.form['title'] and request.form['title'].strip())): # if title is blank or only has spaces
                 return render_template('create.html', message = "Please have a title")
+            elif(not(request.form['content'] and request.form['content'].strip())): # if story is blank
+                return render_template('create.html', message = "Please start the story")
+            elif("/" in request.form['title'] or "\\" in request.form['title']): # slashes are special characters that affect the url
+                return render_template('create.html', message = "Please omit slashes in the title")
             else:
-                if(not(request.form['content'] and request.form['content'].strip())):
-                    return render_template('create.html', message = "Please start the story")
                 content_list = request.form['content'].split('\n')
                 content = ' '.join(content_list)
             try:
