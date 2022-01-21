@@ -9,7 +9,7 @@
     <h1>
         Create Account
     </h1>
-    <form action="/create_account" method="POST">
+    <form action={{ url_for('create_account_render') }} method="POST">
       <label>Set Username:</label>
       <input type="text" name="username">
       <br><br>
@@ -23,7 +23,7 @@
       <input type="submit" name="sub1" value="Create My Account!">
     </form>
     <br>
-    <form action="/" method="POST">
+    <form action={{ url_for('disp_loginpage') }} method="POST">
         <input type="submit" name="sub1" value="Back to Login Page">
     </form>
   </body>

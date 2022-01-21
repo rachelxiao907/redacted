@@ -15,7 +15,7 @@
     {{last_entry}}<br/><br/>
     Last contributed by: <b>{{last_contributor}}</b><br/>
     <!-- adding new entry -->
-    <form action="/home" method="POST">
+    <form action={{ url_for('load_home') }} method="POST">
       <h3>Add On!</h3>
       <!-- max length for entry is 300 characters -->
       <textarea id = "entry" name="entry" maxlength = "300" rows = "5" cols = "100" ></textarea><br>
@@ -26,7 +26,7 @@
       <input type="submit" name="sub_entry" value="Submit">
     </form>
     <br><br>
-    <a href="/home">Back to Home Page</a>
+    <a href={{ url_for('load_home') }}>Back to Home Page</a>
   </body>
 
 </html>

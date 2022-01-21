@@ -10,17 +10,17 @@
         Hey {{name}}!
     </h1>
     <h3>Not you? Logout here!</h3>
-    <form action="/"> <!-- go back to login page -->
+    <form action={{ url_for('disp_loginpage') }}> <!-- go back to login page -->
       <input type="submit" value="Logout" name="sub2">
     </form>
     <div id = "forge">
       <h4> Forge your own story! Create a Story with a title and story, any length you want!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
-      <a href= "/create"> Create a Story </a><br>
+      <a href= {{ url_for('create_story') }}> Create a Story </a><br>
     </div>
 
     <div id = "refine">
       <h4> Augment another Story! Add on to another forger's story with a maximum of 300 characters!  KEEP IN MIND you will not be able to edit the story afterward! </h4>
-      <a href = "/add"> Add to a Story </a> <br/><br/>
+      <a href = {{ url_for('add_story_list') }}> Add to a Story </a> <br/><br/>
     </div>
 
     <div id = "own_stories">

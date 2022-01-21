@@ -8,7 +8,7 @@
 
   <body>
     <h1> Click on the Story to add to it!</h1>
-    <a href="/home">Back to Home Page</a>
+    <a href={{ url_for('load_home') }}>Back to Home Page</a>
     <br><br>
 
     <!-- loop through the story in story addable list -->
@@ -19,7 +19,7 @@
             {% set title = story.replace(" ", "_") %}
         {% endif %}
         <!-- have a link such that when user click on a story it would redirect to the page-->
-        <a href = /add/{{title}}> {{story}}</a>
+        <a href = {{ url_for('add_a_story', story=title) }}> {{story}}</a>
         <br/><br/>
     {% endfor %}
     {{error}}

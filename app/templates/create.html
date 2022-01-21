@@ -9,7 +9,7 @@
     <h1>
         Start a Story
     </h1>
-    <form action="/create" method="POST">
+    <form action={{ url_for('create_story') }} method="POST">
       <h2> Title:</h2>
       <input type="text" name="title" maxlength = "50">
       <br><br>
@@ -22,7 +22,7 @@
       <input type="submit" name="sub_create" value="Submit Story">
       <br><br><h3 style="color:red;">{{message}}</h3>
     </form>
-    <a href="/home">Back to Home Page</a>
+    <a href={{ url_for('load_home') }}>Back to Home Page</a>
     <br>
   </body>
 
