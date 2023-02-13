@@ -25,7 +25,7 @@ def disp_loginpage():
         session['login'] = False # end session
     if ('login' in session): # login is the login button
         if (session['login'] != False): # if user is not logged out, session['login'] is the user's username
-            return redirect(url_for('load_home')) # landing page after login
+            return redirect("/home") # landing page after login
     #print(session)
 
     if ('username' in data):
@@ -43,7 +43,7 @@ def disp_loginpage():
             if(error == ""):
                 session["login"] = name_input # session username is stored
                 #print("hello") #check is the username was stores
-                return redirect(url_for('load_home')) # render landing page
+                return redirect("/home") # render landing page
         except Exception as e:
             error = e
         return render_template('login.html', error_message = error) # render login page with the correct error message
@@ -69,7 +69,7 @@ def load_home():
             list_story.append(db.get_story(i))
         return render_template('home.html', name = session['login'], story_col = list_story) # render home page with username
     else:
-        return redirect(url_for('disp_loginpage'))
+        return redirect("/")
 
 
 @app.route("/create_account", methods=['GET', 'POST'])
@@ -104,7 +104,7 @@ def create_account_render():
         else:
             try:
                 db.add_login(name_input, pass_input) # try to add u/p pair to db
-                return redirect(url_for('disp_loginpage')) # go back to login page
+                return redirect("/") # go back to login page
             except sqlite3.IntegrityError: # error if the username is a duplicate
                 error = "Username already exists!"
         return render_template('create_account.html', error_message = error)
@@ -122,7 +122,7 @@ def add_story_list():
         #print(get_story_last_entry(request.form["title"]))
         return render_template("add.html", collection = story_list)
     else:
-        return redirect(url_for('load_home'))
+        return redirect("/home")
 
 
 @app.route("/add/<story>")
@@ -136,7 +136,7 @@ def add_a_story(story): # story is the title of the story
             last_entry = db.get_story_last_entry(story)
             return render_template("add_story.html", last_contributor = last_entry[0], last_entry = last_entry[1], title = story)
     else:
-        return redirect(url_for('load_home'))
+        return redirect("/home")
 
 
 @app.route("/create", methods=['GET', 'POST'])
@@ -165,7 +165,7 @@ def create_story():
         else:
             return render_template("create.html", message = "")
     else:
-        return redirect(url_for('load_home'))
+        return redirect("/home")
 
 
 if __name__ == "__main__": #false if this file imported as module
